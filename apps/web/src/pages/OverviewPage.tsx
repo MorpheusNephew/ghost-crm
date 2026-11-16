@@ -1,8 +1,9 @@
 import { CalendarDays, Ghost, Sparkles, Waypoints } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { AppLayoutContext } from "@/layouts/AppLayout";
 
 const roster = [
   {
@@ -46,12 +47,9 @@ const sightings = [
   },
 ];
 
-export function OverviewPage({
-  notify,
-}: {
-  notify: (message: string) => void;
-}) {
+export function OverviewPage() {
   const navigate = useNavigate();
+  const { notify } = useOutletContext<AppLayoutContext>();
   return (
     <div className="mx-auto max-w-7xl px-5 pb-12 pt-11 sm:px-8 lg:px-12">
       <div className="mb-9 flex items-center justify-between gap-5">

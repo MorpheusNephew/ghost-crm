@@ -1,16 +1,14 @@
 import { ArrowLeft, CalendarDays, MapPin, ShieldAlert } from "lucide-react";
-import { NavLink, Navigate, useParams } from "react-router";
+import { NavLink, Navigate, useOutletContext, useParams } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ghosts } from "@/lib/ghosts";
+import type { AppLayoutContext } from "@/layouts/AppLayout";
 
-export function GhostProfilePage({
-  notify,
-}: {
-  notify: (message: string) => void;
-}) {
+export function GhostProfilePage() {
   const { ghostId } = useParams();
+  const { notify } = useOutletContext<AppLayoutContext>();
   const ghost = ghosts.find((profile) => profile.id === ghostId);
   if (!ghost) return <Navigate to="/ghosts" replace />;
   const availability =

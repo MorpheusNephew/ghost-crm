@@ -1,12 +1,14 @@
 import { SlidersHorizontal } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ghosts } from "@/lib/ghosts";
+import type { AppLayoutContext } from "@/layouts/AppLayout";
 
-export function GhostsPage({ notify }: { notify: (message: string) => void }) {
+export function GhostsPage() {
   const navigate = useNavigate();
+  const { notify } = useOutletContext<AppLayoutContext>();
 
   return (
     <div className="mx-auto max-w-7xl px-5 pb-12 pt-11 sm:px-8 lg:px-12">
