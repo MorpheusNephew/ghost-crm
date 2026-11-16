@@ -2,6 +2,9 @@ services:
   web:
     build:
       target: development
+    # The named node_modules volume persists across restarts. Sync it from the
+    # lockfile before Vite starts so newly added packages are available.
+    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0"
     ports:
       - "5173:5173"
     volumes:
