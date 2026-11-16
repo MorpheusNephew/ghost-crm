@@ -1,4 +1,11 @@
 services:
+  crm:
+    build:
+      context: .
+      dockerfile: services/crm/Dockerfile
+    networks:
+      - ghost-crm
+
   web:
     build:
       context: .

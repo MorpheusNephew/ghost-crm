@@ -1,5 +1,5 @@
 # Install dependencies once so development and production builds use the same lockfile.
-FROM node:22-alpine AS dependencies
+FROM node:24.22.3-alpine AS dependencies
 WORKDIR /workspace/apps/web
 COPY apps/web/package.json apps/web/package-lock.json ./
 RUN npm ci

@@ -1,4 +1,8 @@
 services:
+  crm:
+    build:
+      target: production
+
   web:
     build:
       target: production
