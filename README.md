@@ -119,6 +119,16 @@ query options rather than hand-writing fetch calls for documented CRM endpoints.
 When running Docker Compose, the web service proxies `/api` and `/openapi.json` to the CRM
 service. This keeps the browser on one origin in both development and production.
 
+## Tests
+
+Run each focused workspace suite with coverage thresholds:
+
+```sh
+pnpm --filter @ghost-crm/contracts test:coverage
+pnpm --filter @ghost-crm/crm test:coverage
+pnpm --filter web test:coverage
+```
+
 ## Status
 
 Ghost CRM is currently in product-definition and architecture-planning. This README describes the intended product and engineering scope; implementation details and local setup instructions will be added as the application is built.
