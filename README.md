@@ -1,137 +1,115 @@
 # Ghost CRM
 
-Ghost CRM is a multi-tenant CRM for haunted attractions, Halloween events, paranormal tours, and ghost-hunting communities. It helps organizers manage ghost profiles, venues, events, sightings, and campaign outreach without losing the playful character of the domain.
+Ghost CRM is a systems-design portfolio project for haunted attractions, Halloween events, paranormal tours, and ghost-hunting communities. It explores how an operational CRM can manage ghost profiles, venues, and event staffing while keeping the domain playful and the engineering credible.
 
-> A systems-design portfolio project about building trustworthy operational software for the afterlife.
+## Current status
 
-## The problem
+The repository contains a runnable v1 demo: a React web application, an Express CRM API, shared Zod contracts, an OpenAPI document, and a generated typed web client.
 
-Halloween-event organizers often coordinate recurring characters, venue details, event schedules, investigation notes, and outreach through spreadsheets and disconnected tools. Ghost CRM treats ghosts as the core relationship records and gives each organization a secure, searchable operating system for its paranormal events.
+The current demo uses fixed data and read-only endpoints. It supports viewing:
 
-An organizer should be able to answer questions such as:
+- Ghost profiles, including lifecycle and threat-level information.
+- One-time events at a single venue, with one or more assigned ghosts.
+- Event details and roster information.
+- Venue and overview data used by the web application.
 
-- Which ghosts are assigned to next weekend's haunted tour?
-- Which active ghosts have not been sighted recently?
-- What happened during a prior investigation?
-- Who changed a ghost's threat level or event assignment?
-- Did every selected ghost receive an invitation to the next séance?
+Authentication, organizations, persisted data, scheduling writes, sightings, and campaigns are intentionally future work. The [initial data-model requirements](docs/initial-data-model-requirements.md) describe the decisions made so far and distinguish the v1 scope from later work.
 
-## Product scope
-
-### Core workflows
-
-- Create, search, filter, edit, and archive ghost profiles.
-- Manage venues and schedule events such as investigations, haunted tours, séances, and parties.
-- Assign ghosts to events and surface scheduling conflicts.
-- Record sightings with notes, confidence, attachments, and a reporting team member.
-- Display an activity timeline for meaningful changes.
-- Build ghost segments and run reliable invitation campaigns.
-
-### Users
-
-| Role                       | Responsibilities                                          |
-| -------------------------- | --------------------------------------------------------- |
-| Organization administrator | Manages members, roles, settings, and venues.             |
-| Event coordinator          | Plans events, assigns ghosts, and runs campaigns.         |
-| Investigator or volunteer  | Records sightings and operational notes.                  |
-| Read-only collaborator     | Reviews histories and event details without editing data. |
-
-## Design principles
-
-- **Multi-tenant by default:** every request is scoped to an organization and organization boundaries are enforced server-side.
-- **Auditability:** important changes are attributable, timestamped, and visible in an activity timeline.
-- **Reliable operations:** retries and asynchronous work must not create duplicate invitations or duplicate business actions.
-- **Progressive complexity:** begin with a cohesive relational application, then introduce specialized infrastructure only when a real access pattern justifies it.
-- **Playful, not frivolous:** the visual product can be fun while the data model, security, and operational behavior remain credible.
-
-## Planned architecture
-
-The initial design will use a relational system of record because ghosts, organizations, venues, events, users, and activity records have strongly connected data and require reliable transactions.
+## Repository layout
 
 ```text
-Web application
-    │
-    ▼
-API and authorization layer
-    │
-    ▼
-Relational database
-    ├── Activity and audit records
-    ├── Background jobs and outbox records
-    └── Tenant-scoped application data
-
-Future capabilities when justified:
-    ├── Object storage for evidence uploads
-    ├── Queue and workers for campaigns
-    ├── Cache for repeated reads and rate limits
-    └── Search index for full-text discovery
+apps/web              React and Vite web application
+services/crm          Express CRM API
+packages/contracts    Shared Zod schemas and OpenAPI metadata
 ```
 
-The project will document the conditions that justify each architectural evolution, including scale, query patterns, reliability requirements, and operational cost.
+## Prerequisites
 
-## Systems-design questions
+- Node.js 24 (the version used in CI)
+- pnpm 10.33.4 or later
+- Docker Desktop and Docker Compose, if using the containerized environments
 
-Ghost CRM is intentionally designed to make these engineering decisions visible:
+Install dependencies for local commands:
 
-- How should tenant context be derived and enforced in every query and job?
-- Which changes require one transaction, and which should be published asynchronously?
-- How should campaign delivery be idempotent and observable?
-- How should the application preserve an audit history without making common reads slow?
-- When do search, caching, object storage, and a queue become necessary?
-- Which metrics reveal slow requests, stuck jobs, delivery failures, and authorization problems?
+```sh
+pnpm install --frozen-lockfile
+```
 
-## Roadmap
+## Run with Docker Compose
 
-### Phase 1 — Operational foundation
+The Makefile is the recommended way to start the local environments.
 
-- Organization-scoped authentication and roles.
-- Ghost, venue, event, and sighting management.
-- Activity timeline and basic search/filtering.
-- Validation, permissions, loading states, and audit records.
+```sh
+make dev
+```
 
-### Phase 2 — Reliable campaign delivery
+This starts the hot-reloading web application at <http://localhost:5173> and the CRM API at <http://localhost:3000>. Stop it with:
 
-- Saved segments and campaign creation.
-- Background jobs, retries, idempotency, and delivery-status tracking.
-- Simulated notification provider before real channel integrations.
+```sh
+make dev-down
+```
 
-### Phase 3 — Evidence and scale
+To run the production-like containers instead, use:
 
-- Evidence uploads and attachment lifecycle management.
-- Full-text search where relational search no longer meets product needs.
-- Observability, operational dashboards, and incident-oriented runbooks.
+```sh
+make prod
+```
+
+The production web application is available at <http://localhost:8080>. Stop it with `make prod-down`.
+
+Pass Docker Compose flags through `COMPOSE_ARGS`; for example, run either environment in the background with:
+
+```sh
+make dev COMPOSE_ARGS="--detach"
+```
+
+Use `make help` to see all available environment and log commands.
 
 ## API contracts and generated client
 
-The shared Zod schemas in `packages/contracts` define CRM response shapes. The CRM service
-uses those schemas to generate and serve an OpenAPI 3.1 document at `/openapi.json`.
+Shared Zod schemas in `packages/contracts` define CRM response shapes and OpenAPI metadata. The CRM service serves the generated OpenAPI 3.1 document at `/openapi.json`.
 
-Regenerate the checked-in OpenAPI document and the web application's typed fetch client and
-TanStack Query options after changing an API contract:
+After changing a contract or documented endpoint, regenerate both tracked artifacts:
 
 ```sh
 pnpm generate:client
 ```
 
-The generated client is in `apps/web/src/api/generated`. Application code should import its
-query options rather than hand-writing fetch calls for documented CRM endpoints.
+This updates `services/crm/openapi.json` and the typed client in `apps/web/src/api/generated`. Web application code should use the generated query options rather than hand-written fetch calls for documented endpoints.
 
-When running Docker Compose, the web service proxies `/api` and `/openapi.json` to the CRM
-service. This keeps the browser on one origin in both development and production.
+When using Docker Compose, the web service proxies `/api` and `/openapi.json` to the CRM service, keeping the browser on one origin in development and production.
 
-## Tests
+## Quality checks
 
-Run each focused workspace suite with coverage thresholds:
+Run formatting and the focused test suites locally:
 
 ```sh
+pnpm format:check
 pnpm --filter @ghost-crm/contracts test:coverage
 pnpm --filter @ghost-crm/crm test:coverage
 pnpm --filter web test:coverage
 ```
 
-## Status
+Build each production artifact with:
 
-Ghost CRM is currently in product-definition and architecture-planning. This README describes the intended product and engineering scope; implementation details and local setup instructions will be added as the application is built.
+```sh
+pnpm --filter @ghost-crm/contracts build
+pnpm --filter @ghost-crm/crm build
+pnpm --filter web build
+```
+
+## Continuous integration
+
+GitHub Actions runs for pull requests targeting `main` and for pushes to `main`. It verifies:
+
+- Prettier formatting and web linting.
+- OpenAPI and generated-client artifacts are current.
+- Contract, CRM, and web test suites meet their coverage thresholds.
+- Production builds for contracts, the CRM service, and the web application.
+
+## Product direction
+
+The project is intended to make systems-design decisions visible. Future work will add persisted, organization-scoped records; authorization; scheduling conflict handling; audit history; sightings; and campaign delivery. The data model and product decisions will evolve incrementally from the v1 demo rather than assuming all of that complexity at the outset.
 
 ## License
 
