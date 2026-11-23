@@ -6,12 +6,19 @@ import type {
   GetEventData,
   GetEventErrors,
   GetEventResponses,
+  GetGhostData,
+  GetGhostErrors,
+  GetGhostResponses,
   GetHealthData,
   GetHealthResponses,
+  GetOverviewData,
+  GetOverviewResponses,
   ListEventsData,
   ListEventsResponses,
   ListGhostsData,
   ListGhostsResponses,
+  ListVenuesData,
+  ListVenuesResponses,
 } from './types.gen';
 
 export type Options<
@@ -40,6 +47,39 @@ export const getHealth = <ThrowOnError extends boolean = false>(
 ): RequestResult<GetHealthResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetHealthResponses, unknown, ThrowOnError>({
     url: '/health',
+    ...options,
+  });
+
+/**
+ * Get a ghost profile
+ */
+export const getGhost = <ThrowOnError extends boolean = false>(
+  options: Options<GetGhostData, ThrowOnError>,
+): RequestResult<GetGhostResponses, GetGhostErrors, ThrowOnError> =>
+  (options.client ?? client).get<GetGhostResponses, GetGhostErrors, ThrowOnError>({
+    url: '/api/ghosts/{ghostId}',
+    ...options,
+  });
+
+/**
+ * Get the operations overview
+ */
+export const getOverview = <ThrowOnError extends boolean = false>(
+  options?: Options<GetOverviewData, ThrowOnError>,
+): RequestResult<GetOverviewResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetOverviewResponses, unknown, ThrowOnError>({
+    url: '/api/overview',
+    ...options,
+  });
+
+/**
+ * List venues
+ */
+export const listVenues = <ThrowOnError extends boolean = false>(
+  options?: Options<ListVenuesData, ThrowOnError>,
+): RequestResult<ListVenuesResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<ListVenuesResponses, unknown, ThrowOnError>({
+    url: '/api/venues',
     ...options,
   });
 

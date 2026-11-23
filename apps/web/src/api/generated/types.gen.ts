@@ -60,6 +60,66 @@ export type GhostListResponse = {
   }>;
 };
 
+export type GhostDetailResponse = {
+  ghost: {
+    id: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+    lifecycle: 'active' | 'inactive';
+    threatLevel: 'low' | 'moderate' | 'high';
+    availability: 'available' | 'assigned' | 'needs_review';
+    upcomingAssignment?: {
+      eventId: string;
+      eventTitle: string;
+      startsAt: string;
+      endsAt: string;
+      venue: {
+        id: string;
+        name: string;
+        address: string;
+      };
+    };
+  };
+};
+
+export type OverviewResponse = {
+  metrics: {
+    upcomingEvents: number;
+    scheduledGhosts: number;
+    attendanceDue: number;
+    schedulingConflicts: number;
+  };
+  nextEvent: {
+    id: string;
+    title: string;
+    description: string;
+    status: 'draft' | 'scheduled' | 'cancelled';
+    startsAt: string;
+    endsAt: string;
+    venue: {
+      id: string;
+      name: string;
+      address: string;
+    };
+    ghostCount: number;
+    roster: Array<{
+      id: string;
+      name: string;
+      attendance: 'pending' | 'attended' | 'no_show';
+      note?: string;
+    }>;
+  };
+};
+
+export type VenueListResponse = {
+  venues: Array<{
+    id: string;
+    name: string;
+    address: string;
+  }>;
+};
+
 export type ErrorResponse = {
   error: string;
 };
@@ -79,6 +139,65 @@ export type GetHealthResponses = {
 };
 
 export type GetHealthResponse = GetHealthResponses[keyof GetHealthResponses];
+
+export type GetGhostData = {
+  body?: never;
+  path: {
+    ghostId: string;
+  };
+  query?: never;
+  url: '/api/ghosts/{ghostId}';
+};
+
+export type GetGhostErrors = {
+  /**
+   * No ghost matches the identifier.
+   */
+  404: ErrorResponse;
+};
+
+export type GetGhostError = GetGhostErrors[keyof GetGhostErrors];
+
+export type GetGhostResponses = {
+  /**
+   * The ghost profile and its next assignment.
+   */
+  200: GhostDetailResponse;
+};
+
+export type GetGhostResponse = GetGhostResponses[keyof GetGhostResponses];
+
+export type GetOverviewData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: '/api/overview';
+};
+
+export type GetOverviewResponses = {
+  /**
+   * The next event and its derived operational metrics.
+   */
+  200: OverviewResponse;
+};
+
+export type GetOverviewResponse = GetOverviewResponses[keyof GetOverviewResponses];
+
+export type ListVenuesData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: '/api/venues';
+};
+
+export type ListVenuesResponses = {
+  /**
+   * The available venues.
+   */
+  200: VenueListResponse;
+};
+
+export type ListVenuesResponse = ListVenuesResponses[keyof ListVenuesResponses];
 
 export type ListGhostsData = {
   body?: never;

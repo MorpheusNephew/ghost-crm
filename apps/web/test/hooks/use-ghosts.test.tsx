@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
-import { useGhosts } from '@/hooks/use-ghosts';
+import { useGhost, useGhosts } from '@/hooks/use-ghosts';
 import { server } from '../mocks';
 import { createQueryWrapper } from '../test-utils';
 
@@ -21,5 +21,13 @@ describe('ghost hooks', () => {
     const { result } = renderHook(() => useGhosts(), { wrapper: createQueryWrapper() });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
+  });
+
+  it('loads a selected ghost and leaves an absent identifier disabled', async () => {
+    const selected = renderHook(() => useGhost('lady-grey'), { wrapper: createQueryWrapper() });
+    const absent = renderHook(() => useGhost(undefined), { wrapper: createQueryWrapper() });
+
+    await waitFor(() => expect(selected.result.current.ghost?.availability).toBe('assigned'));
+    expect(absent.result.current.ghost).toBeUndefined();
   });
 });

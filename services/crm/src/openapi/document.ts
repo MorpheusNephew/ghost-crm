@@ -6,7 +6,10 @@ import {
 import {
   eventDetailResponseSchema,
   eventListResponseSchema,
+  ghostDetailResponseSchema,
   ghostListResponseSchema,
+  overviewResponseSchema,
+  venueListResponseSchema,
 } from '@ghost-crm/contracts';
 import { z } from 'zod';
 
@@ -24,7 +27,11 @@ const healthResponseSchema = registry.register(
 const eventListResponse = registry.register('EventListResponse', eventListResponseSchema);
 const eventDetailResponse = registry.register('EventDetailResponse', eventDetailResponseSchema);
 const ghostListResponse = registry.register('GhostListResponse', ghostListResponseSchema);
+const ghostDetailResponse = registry.register('GhostDetailResponse', ghostDetailResponseSchema);
+const overviewResponse = registry.register('OverviewResponse', overviewResponseSchema);
+const venueListResponse = registry.register('VenueListResponse', venueListResponseSchema);
 const eventIdParamsSchema = z.object({ eventId: z.string().min(1) });
+const ghostIdParamsSchema = z.object({ ghostId: z.string().min(1) });
 const errorResponseSchema = registry.register('ErrorResponse', z.object({ error: z.string() }));
 
 registry.registerPath({
@@ -36,6 +43,53 @@ registry.registerPath({
     200: {
       description: 'The CRM service is available.',
       content: { 'application/json': { schema: healthResponseSchema } },
+    },
+  },
+});
+
+registry.registerPath({
+  method: 'get',
+  path: '/api/ghosts/{ghostId}',
+  operationId: 'getGhost',
+  summary: 'Get a ghost profile',
+  tags: ['Ghosts'],
+  request: { params: ghostIdParamsSchema },
+  responses: {
+    200: {
+      description: 'The ghost profile and its next assignment.',
+      content: { 'application/json': { schema: ghostDetailResponse } },
+    },
+    404: {
+      description: 'No ghost matches the identifier.',
+      content: { 'application/json': { schema: errorResponseSchema } },
+    },
+  },
+});
+
+registry.registerPath({
+  method: 'get',
+  path: '/api/overview',
+  operationId: 'getOverview',
+  summary: 'Get the operations overview',
+  tags: ['Overview'],
+  responses: {
+    200: {
+      description: 'The next event and its derived operational metrics.',
+      content: { 'application/json': { schema: overviewResponse } },
+    },
+  },
+});
+
+registry.registerPath({
+  method: 'get',
+  path: '/api/venues',
+  operationId: 'listVenues',
+  summary: 'List venues',
+  tags: ['Venues'],
+  responses: {
+    200: {
+      description: 'The available venues.',
+      content: { 'application/json': { schema: venueListResponse } },
     },
   },
 });
@@ -97,5 +151,7 @@ export const openApiDocument = new OpenApiGeneratorV31(registry.definitions).gen
   tags: [
     { name: 'Events', description: 'Event scheduling and roster data.' },
     { name: 'Ghosts', description: 'Ghost profile data.' },
+    { name: 'Overview', description: 'Operational dashboard data.' },
+    { name: 'Venues', description: 'Venue availability data.' },
   ],
 });

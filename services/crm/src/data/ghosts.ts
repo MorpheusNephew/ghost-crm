@@ -1,4 +1,10 @@
-import { ghostListResponseSchema, type GhostSummary } from '@ghost-crm/contracts';
+import {
+  ghostDetailSchema,
+  ghostListResponseSchema,
+  type GhostDetail,
+  type GhostSummary,
+} from '@ghost-crm/contracts';
+import { demoEvents } from './events';
 
 const demoGhosts: GhostSummary[] = [
   {
@@ -37,3 +43,30 @@ const demoGhosts: GhostSummary[] = [
 
 export const listDemoGhosts = (): GhostSummary[] =>
   ghostListResponseSchema.parse({ ghosts: demoGhosts }).ghosts;
+
+export const getDemoGhost = (ghostId: string): GhostDetail | undefined => {
+  const ghost = demoGhosts.find((candidate) => candidate.id === ghostId);
+  if (!ghost) return undefined;
+
+  const event = demoEvents.find((candidate) =>
+    candidate.roster.some((rosterGhost) => rosterGhost.id === ghost.id),
+  );
+  const availability =
+    ghost.lifecycle === 'inactive' ? 'needs_review' : event ? 'assigned' : 'available';
+
+  return ghostDetailSchema.parse({
+    ...ghost,
+    availability,
+    ...(event
+      ? {
+          upcomingAssignment: {
+            eventId: event.id,
+            eventTitle: event.title,
+            startsAt: event.startsAt,
+            endsAt: event.endsAt,
+            venue: event.venue,
+          },
+        }
+      : {}),
+  });
+};

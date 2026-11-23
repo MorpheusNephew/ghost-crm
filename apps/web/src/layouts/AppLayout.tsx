@@ -11,7 +11,7 @@ import {
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ghosts } from '@/lib/ghosts';
+import { useGhosts } from '@/hooks/use-ghosts';
 
 export type AppLayoutContext = { notify: (message: string) => void };
 
@@ -25,14 +25,15 @@ export function AppLayout() {
   const [notice, setNotice] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+  const { ghosts } = useGhosts();
   const notify = (message: string) => {
     setNotice(message);
     window.setTimeout(() => setNotice(''), 2400);
   };
 
   useEffect(() => {
-    document.title = titleForPath(location.pathname);
-  }, [location.pathname]);
+    document.title = titleForPath(location.pathname, ghosts);
+  }, [location.pathname, ghosts]);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -127,7 +128,7 @@ export function AppLayout() {
   );
 }
 
-function titleForPath(pathname: string) {
+function titleForPath(pathname: string, ghosts: Array<{ id: string; name: string }>) {
   if (pathname === '/') return 'Specter';
 
   const ghost = ghosts.find((profile) => pathname === `/ghosts/${profile.id}`);

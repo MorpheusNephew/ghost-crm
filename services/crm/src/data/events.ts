@@ -4,12 +4,10 @@ import {
   type EventDetail,
   type EventSummary,
 } from '@ghost-crm/contracts';
+import { demoVenues } from './venues';
 
-const ravenVenue = {
-  id: 'ravens-hollow-estate',
-  name: "Raven's Hollow Estate",
-  address: '1200 Ravenswood Lane',
-};
+const ravenVenue = demoVenues[0]!;
+const blackwaterVenue = demoVenues[1]!;
 
 export const demoEvents: EventDetail[] = [
   {
@@ -40,7 +38,7 @@ export const demoEvents: EventDetail[] = [
     status: 'draft',
     startsAt: '2026-11-06T20:00:00-05:00',
     endsAt: '2026-11-06T21:30:00-05:00',
-    venue: { id: 'blackwater-manor', name: 'Blackwater Manor', address: '13 Briar Road' },
+    venue: blackwaterVenue,
     ghostCount: 1,
     roster: [{ id: 'eleanor-vane', name: 'Eleanor Vane', attendance: 'pending' }],
   },

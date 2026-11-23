@@ -3,9 +3,13 @@ import { NavLink } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ghosts } from '@/lib/ghosts';
+import { useGhosts } from '@/hooks/use-ghosts';
+import { useVenues } from '@/hooks/use-venues';
 
 export function EventCreatePage() {
+  const { ghosts, isError: ghostsError, isLoading: ghostsLoading } = useGhosts();
+  const { venues, isError: venuesError, isLoading: venuesLoading } = useVenues();
+
   return (
     <div className="mx-auto max-w-4xl px-5 pb-12 pt-11 sm:px-8 lg:px-12">
       <Button asChild variant="ghost" className="-ml-2 text-muted-foreground">
@@ -36,9 +40,16 @@ export function EventCreatePage() {
             <label className="grid gap-2 text-xs font-medium">
               Venue
               <select className="h-8 rounded-lg border border-input bg-muted px-2 text-sm">
-                <option>Raven's Hollow Estate</option>
-                <option>Blackwater Manor</option>
+                {venues.map((venue) => (
+                  <option key={venue.id}>{venue.name}</option>
+                ))}
               </select>
+              {venuesLoading ? (
+                <span className="text-muted-foreground">Loading venues...</span>
+              ) : null}
+              {venuesError ? (
+                <span className="text-destructive">Unable to load venues.</span>
+              ) : null}
             </label>
             <label className="grid gap-2 text-xs font-medium">
               Date
@@ -68,16 +79,22 @@ export function EventCreatePage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="grid gap-2 border-t border-border pt-5 sm:grid-cols-2">
-            {ghosts.map((ghost) => (
+            {ghostsLoading ? (
+              <p className="text-sm text-muted-foreground">Loading ghosts...</p>
+            ) : null}
+            {ghostsError ? (
+              <p className="text-sm text-destructive">Unable to load ghosts.</p>
+            ) : null}
+            {ghosts.map((ghost, index) => (
               <label
                 key={ghost.id}
                 className="flex items-center gap-3 rounded-lg border border-border bg-muted/40 p-3 text-sm"
               >
                 <input type="checkbox" className="size-4 accent-[var(--primary)]" />
                 <span
-                  className={`grid size-7 place-items-center rounded-full text-xs font-bold ${ghost.color}`}
+                  className={`grid size-7 place-items-center rounded-full text-xs font-bold ${avatarTone(index)}`}
                 >
-                  {ghost.initial}
+                  {ghost.name.at(0)}
                 </span>
                 <span>{ghost.name}</span>
               </label>
@@ -100,4 +117,15 @@ export function EventCreatePage() {
       </form>
     </div>
   );
+}
+
+function avatarTone(index: number) {
+  const tones = [
+    'bg-violet-300 text-violet-950',
+    'bg-orange-300 text-orange-950',
+    'bg-emerald-300 text-emerald-950',
+    'bg-sky-300 text-sky-950',
+  ];
+
+  return tones[index % tones.length];
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { listDemoGhosts } from '../src/data/ghosts';
+import { getDemoGhost, listDemoGhosts } from '../src/data/ghosts';
 
 describe('demo ghost service', () => {
   it('returns valid ghost summaries', () => {
@@ -12,5 +12,16 @@ describe('demo ghost service', () => {
         }),
       ]),
     );
+  });
+
+  it('derives a ghost assignment from the event roster', () => {
+    expect(getDemoGhost('lady-grey')).toMatchObject({
+      availability: 'assigned',
+      upcomingAssignment: { eventId: 'ravens-hollow-haunted-tour' },
+    });
+  });
+
+  it('returns undefined for a missing ghost', () => {
+    expect(getDemoGhost('missing-ghost')).toBeUndefined();
   });
 });
