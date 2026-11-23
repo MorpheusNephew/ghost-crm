@@ -3,16 +3,24 @@ import { NavLink, Navigate, useParams } from 'react-router';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ghosts } from '@/lib/ghosts';
+import { useGhost } from '@/hooks/use-ghosts';
+import { formatEventDate, formatEventTimeRange } from '@/utilities';
 
 export function GhostProfilePage() {
   const { ghostId } = useParams();
-  const ghost = ghosts.find((profile) => profile.id === ghostId);
-  if (!ghost) return <Navigate to="/ghosts" replace />;
+  const { ghost, isError, isLoading } = useGhost(ghostId);
+  if (!ghostId || isError) return <Navigate to="/ghosts" replace />;
+  if (isLoading || !ghost) {
+    return (
+      <div className="mx-auto max-w-7xl px-5 pb-12 pt-11 text-sm text-muted-foreground">
+        Loading ghost...
+      </div>
+    );
+  }
   const availability =
-    ghost.status === 'Needs review'
+    ghost.availability === 'needs_review'
       ? 'Needs coordinator review'
-      : ghost.status === 'Assigned'
+      : ghost.availability === 'assigned'
         ? 'Assigned to upcoming event'
         : 'Available for assignment';
 
@@ -30,27 +38,31 @@ export function GhostProfilePage() {
       </Button>
       <div className="mt-7 flex flex-wrap items-start justify-between gap-5">
         <div className="flex items-center gap-4">
-          <span
-            className={`grid size-16 place-items-center rounded-full text-xl font-bold ${ghost.color}`}
-          >
-            {ghost.initial}
+          <span className="grid size-16 place-items-center rounded-full bg-violet-300 text-xl font-bold text-violet-950">
+            {ghost.name.at(0)}
           </span>
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-3xl font-semibold tracking-[-.055em] text-foreground">
                 {ghost.name}
               </h1>
-              <Badge className="border-0 bg-white/10 text-[9px] text-[#e3e1e8]">Active</Badge>
+              <Badge className="border-0 bg-white/10 text-[9px] text-[#e3e1e8]">
+                {ghost.lifecycle}
+              </Badge>
             </div>
-            <p className="mt-2 text-sm text-muted-foreground">{ghost.descriptor}</p>
+            <p className="mt-2 text-sm text-muted-foreground">{ghost.description}</p>
           </div>
         </div>
       </div>
       <section className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatusCard label="LIFECYCLE" value="Active" detail="Eligible for assignments" />
+        <StatusCard
+          label="LIFECYCLE"
+          value={ghost.lifecycle}
+          detail="Eligibility for new assignments"
+        />
         <StatusCard
           label="THREAT LEVEL"
-          value={ghost.threat}
+          value={ghost.threatLevel}
           detail="Audited when changed"
           tone="orange"
         />
@@ -60,7 +72,11 @@ export function GhostProfilePage() {
           detail="Derived from assignments"
           tone="mint"
         />
-        <StatusCard label="ASSIGNMENTS" value={ghost.status} detail="Demo roster status" />
+        <StatusCard
+          label="ASSIGNMENTS"
+          value={ghost.availability}
+          detail="Derived from the event roster"
+        />
       </section>
       <section className="mt-7 grid gap-4 xl:grid-cols-[1.2fr_.8fr]">
         <Card className="shadow-none">
@@ -68,22 +84,24 @@ export function GhostProfilePage() {
             <p className="text-[10px] font-bold tracking-[.14em] text-muted-foreground">
               UPCOMING ASSIGNMENT
             </p>
-            <CardTitle className="mt-1 text-lg text-foreground">{ghost.nextEvent}</CardTitle>
+            <CardTitle className="mt-1 text-lg text-foreground">
+              {ghost.upcomingAssignment?.eventTitle ?? 'No upcoming event'}
+            </CardTitle>
           </CardHeader>
           <CardContent className="border-t border-white/10 pt-5">
-            {ghost.nextEvent === 'No upcoming event' ? (
-              <p className="text-sm text-[#a5a4b4]">
-                This ghost has no upcoming assignment and is available for the next eligible event.
-              </p>
-            ) : (
+            {ghost.upcomingAssignment ? (
               <div className="space-y-4">
                 <p className="flex items-center gap-2 text-sm text-[#d5d4df]">
                   <CalendarDays className="size-4 text-[#b8ff70]" />
-                  Saturday, October 31 - 7:00 PM
+                  {formatEventDate(ghost.upcomingAssignment.startsAt)} -{' '}
+                  {formatEventTimeRange(
+                    ghost.upcomingAssignment.startsAt,
+                    ghost.upcomingAssignment.endsAt,
+                  )}
                 </p>
                 <p className="flex items-center gap-2 text-sm text-[#d5d4df]">
                   <MapPin className="size-4 text-[#b8ff70]" />
-                  Raven's Hollow Estate
+                  {ghost.upcomingAssignment.venue.name}
                 </p>
                 <p className="flex items-center gap-2 text-sm text-[#d5d4df]">
                   <ShieldAlert className="size-4 text-orange-300" />
@@ -94,9 +112,15 @@ export function GhostProfilePage() {
                   variant="outline"
                   className="mt-2 border-white/10 bg-white/[.045] text-[#d9d8e3] hover:bg-white/10 hover:text-white"
                 >
-                  <NavLink to="/events/ravens-hollow-haunted-tour">View event roster</NavLink>
+                  <NavLink to={`/events/${ghost.upcomingAssignment.eventId}`}>
+                    View event roster
+                  </NavLink>
                 </Button>
               </div>
+            ) : (
+              <p className="text-sm text-[#a5a4b4]">
+                This ghost has no upcoming assignment and is available for the next eligible event.
+              </p>
             )}
           </CardContent>
         </Card>
@@ -109,7 +133,7 @@ export function GhostProfilePage() {
           </CardHeader>
           <CardContent className="border-t border-white/10 pt-5">
             <p className="text-sm text-[#a5a4b4]">
-              {ghost.status === 'Needs review'
+              {ghost.availability === 'needs_review'
                 ? 'This profile needs a coordinator review before it is scheduled.'
                 : 'Availability is confirmed when creating a new event.'}
             </p>

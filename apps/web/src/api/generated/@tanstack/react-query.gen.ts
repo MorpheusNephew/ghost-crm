@@ -3,17 +3,33 @@
 import { type DefaultError, queryOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { getEvent, getHealth, listEvents, listGhosts, type Options } from '../sdk.gen';
+import {
+  getEvent,
+  getGhost,
+  getHealth,
+  getOverview,
+  listEvents,
+  listGhosts,
+  listVenues,
+  type Options,
+} from '../sdk.gen';
 import type {
   GetEventData,
   GetEventError,
   GetEventResponse,
+  GetGhostData,
+  GetGhostError,
+  GetGhostResponse,
   GetHealthData,
   GetHealthResponse,
+  GetOverviewData,
+  GetOverviewResponse,
   ListEventsData,
   ListEventsResponse,
   ListGhostsData,
   ListGhostsResponse,
+  ListVenuesData,
+  ListVenuesResponse,
 } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -78,6 +94,81 @@ export const getHealthOptions = (options?: Options<GetHealthData>) =>
       return data;
     },
     queryKey: getHealthQueryKey(options),
+  });
+
+export const getGhostQueryKey = (options: Options<GetGhostData>) =>
+  createQueryKey('getGhost', options);
+
+/**
+ * Get a ghost profile
+ */
+export const getGhostOptions = (options: Options<GetGhostData>) =>
+  queryOptions<
+    GetGhostResponse,
+    GetGhostError,
+    GetGhostResponse,
+    ReturnType<typeof getGhostQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getGhost({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getGhostQueryKey(options),
+  });
+
+export const getOverviewQueryKey = (options?: Options<GetOverviewData>) =>
+  createQueryKey('getOverview', options);
+
+/**
+ * Get the operations overview
+ */
+export const getOverviewOptions = (options?: Options<GetOverviewData>) =>
+  queryOptions<
+    GetOverviewResponse,
+    DefaultError,
+    GetOverviewResponse,
+    ReturnType<typeof getOverviewQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getOverview({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getOverviewQueryKey(options),
+  });
+
+export const listVenuesQueryKey = (options?: Options<ListVenuesData>) =>
+  createQueryKey('listVenues', options);
+
+/**
+ * List venues
+ */
+export const listVenuesOptions = (options?: Options<ListVenuesData>) =>
+  queryOptions<
+    ListVenuesResponse,
+    DefaultError,
+    ListVenuesResponse,
+    ReturnType<typeof listVenuesQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listVenues({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: listVenuesQueryKey(options),
   });
 
 export const listGhostsQueryKey = (options?: Options<ListGhostsData>) =>

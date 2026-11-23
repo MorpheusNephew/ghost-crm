@@ -13,6 +13,14 @@
     {
       "name": "Ghosts",
       "description": "Ghost profile data."
+    },
+    {
+      "name": "Overview",
+      "description": "Operational dashboard data."
+    },
+    {
+      "name": "Venues",
+      "description": "Venue availability data."
     }
   ],
   "components": {
@@ -215,6 +223,221 @@
         },
         "required": ["ghosts"]
       },
+      "GhostDetailResponse": {
+        "type": "object",
+        "properties": {
+          "ghost": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "imageUrl": {
+                "type": "string",
+                "format": "uri"
+              },
+              "lifecycle": {
+                "type": "string",
+                "enum": ["active", "inactive"]
+              },
+              "threatLevel": {
+                "type": "string",
+                "enum": ["low", "moderate", "high"]
+              },
+              "availability": {
+                "type": "string",
+                "enum": ["available", "assigned", "needs_review"]
+              },
+              "upcomingAssignment": {
+                "type": "object",
+                "properties": {
+                  "eventId": {
+                    "type": "string"
+                  },
+                  "eventTitle": {
+                    "type": "string"
+                  },
+                  "startsAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "endsAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "venue": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "address": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["id", "name", "address"]
+                  }
+                },
+                "required": ["eventId", "eventTitle", "startsAt", "endsAt", "venue"]
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "description",
+              "imageUrl",
+              "lifecycle",
+              "threatLevel",
+              "availability"
+            ]
+          }
+        },
+        "required": ["ghost"]
+      },
+      "OverviewResponse": {
+        "type": "object",
+        "properties": {
+          "metrics": {
+            "type": "object",
+            "properties": {
+              "upcomingEvents": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "scheduledGhosts": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "attendanceDue": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "schedulingConflicts": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "upcomingEvents",
+              "scheduledGhosts",
+              "attendanceDue",
+              "schedulingConflicts"
+            ]
+          },
+          "nextEvent": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["draft", "scheduled", "cancelled"]
+              },
+              "startsAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "endsAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "venue": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  }
+                },
+                "required": ["id", "name", "address"]
+              },
+              "ghostCount": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "roster": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "attendance": {
+                      "type": "string",
+                      "enum": ["pending", "attended", "no_show"]
+                    },
+                    "note": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["id", "name", "attendance"]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "description",
+              "status",
+              "startsAt",
+              "endsAt",
+              "venue",
+              "ghostCount",
+              "roster"
+            ]
+          }
+        },
+        "required": ["metrics", "nextEvent"]
+      },
+      "VenueListResponse": {
+        "type": "object",
+        "properties": {
+          "venues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "address": {
+                  "type": "string"
+                }
+              },
+              "required": ["id", "name", "address"]
+            }
+          }
+        },
+        "required": ["venues"]
+      },
       "ErrorResponse": {
         "type": "object",
         "properties": {
@@ -239,6 +462,84 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ghosts/{ghostId}": {
+      "get": {
+        "operationId": "getGhost",
+        "summary": "Get a ghost profile",
+        "tags": ["Ghosts"],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "required": true,
+            "name": "ghostId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ghost profile and its next assignment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GhostDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No ghost matches the identifier.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/overview": {
+      "get": {
+        "operationId": "getOverview",
+        "summary": "Get the operations overview",
+        "tags": ["Overview"],
+        "responses": {
+          "200": {
+            "description": "The next event and its derived operational metrics.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/venues": {
+      "get": {
+        "operationId": "listVenues",
+        "summary": "List venues",
+        "tags": ["Venues"],
+        "responses": {
+          "200": {
+            "description": "The available venues.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VenueListResponse"
                 }
               }
             }
