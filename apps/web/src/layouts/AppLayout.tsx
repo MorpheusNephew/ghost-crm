@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   Bell,
   CalendarDays,
@@ -9,28 +9,28 @@ import {
   Send,
   Sparkles,
   Waypoints,
-} from "lucide-react";
-import { NavLink, Outlet, useLocation } from "react-router";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ghosts } from "@/lib/ghosts";
+} from 'lucide-react';
+import { NavLink, Outlet, useLocation } from 'react-router';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ghosts } from '@/lib/ghosts';
 
 export type AppLayoutContext = { notify: (message: string) => void };
 
 const navigation = [
-  { label: "Overview", icon: LayoutDashboard, path: "/" },
-  { label: "Ghosts", icon: Ghost, path: "/ghosts" },
-  { label: "Events", icon: CalendarDays, path: "/events" },
-  { label: "Sightings", icon: Waypoints, path: "/sightings" },
-  { label: "Campaigns", icon: Send, path: "/campaigns" },
+  { label: 'Overview', icon: LayoutDashboard, path: '/' },
+  { label: 'Ghosts', icon: Ghost, path: '/ghosts' },
+  { label: 'Events', icon: CalendarDays, path: '/events' },
+  { label: 'Sightings', icon: Waypoints, path: '/sightings' },
+  { label: 'Campaigns', icon: Send, path: '/campaigns' },
 ];
 
 export function AppLayout() {
-  const [notice, setNotice] = useState("");
+  const [notice, setNotice] = useState('');
   const location = useLocation();
   const notify = (message: string) => {
     setNotice(message);
-    window.setTimeout(() => setNotice(""), 2400);
+    window.setTimeout(() => setNotice(''), 2400);
   };
 
   useEffect(() => {
@@ -53,9 +53,9 @@ export function AppLayout() {
               <NavLink
                 key={label}
                 to={path}
-                end={path === "/"}
+                end={path === '/'}
                 className={({ isActive }) =>
-                  `flex h-8 items-center gap-3 rounded-lg px-2.5 text-sm font-medium transition-colors ${isActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"}`
+                  `flex h-8 items-center gap-3 rounded-lg px-2.5 text-sm font-medium transition-colors ${isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`
                 }
               >
                 <Icon className="size-4" />
@@ -70,7 +70,7 @@ export function AppLayout() {
             </p>
             <Button
               variant="ghost"
-              onClick={() => notify("Organization settings would open here.")}
+              onClick={() => notify('Organization settings would open here.')}
               className="mt-5 h-auto w-full justify-start gap-2 border-border bg-sidebar-accent px-2 py-2 text-xs text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             >
               <span className="grid size-7 place-items-center rounded-full bg-violet-300 font-semibold text-violet-950">
@@ -99,16 +99,14 @@ export function AppLayout() {
                 variant="ghost"
                 size="icon"
                 aria-label="Notifications"
-                onClick={() => notify("No new operational alerts.")}
+                onClick={() => notify('No new operational alerts.')}
                 className="relative text-muted-foreground hover:bg-muted hover:text-foreground"
               >
                 <Bell />
                 <span className="absolute right-2 top-2 size-1.5 rounded-full bg-primary" />
               </Button>
               <Button
-                onClick={() =>
-                  notify("A new ghost profile form would open here.")
-                }
+                onClick={() => notify('A new ghost profile form would open here.')}
                 className="bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 <span className="text-lg leading-none">+</span>
@@ -133,11 +131,11 @@ export function AppLayout() {
 }
 
 function titleForPath(pathname: string) {
-  if (pathname === "/") return "Specter";
+  if (pathname === '/') return 'Specter';
 
   const ghost = ghosts.find((profile) => pathname === `/ghosts/${profile.id}`);
   if (ghost) return `Specter | ${ghost.name}`;
 
   const title = navigation.find((item) => item.path === pathname)?.label;
-  return title ? `Specter | ${title}` : "Specter";
+  return title ? `Specter | ${title}` : 'Specter';
 }

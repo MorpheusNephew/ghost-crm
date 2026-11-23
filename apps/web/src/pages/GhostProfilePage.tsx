@@ -1,10 +1,10 @@
-import { ArrowLeft, CalendarDays, MapPin, ShieldAlert } from "lucide-react";
-import { NavLink, Navigate, useOutletContext, useParams } from "react-router";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ghosts } from "@/lib/ghosts";
-import type { AppLayoutContext } from "@/layouts/AppLayout";
+import { ArrowLeft, CalendarDays, MapPin, ShieldAlert } from 'lucide-react';
+import { NavLink, Navigate, useOutletContext, useParams } from 'react-router';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ghosts } from '@/lib/ghosts';
+import type { AppLayoutContext } from '@/layouts/AppLayout';
 
 export function GhostProfilePage() {
   const { ghostId } = useParams();
@@ -12,11 +12,11 @@ export function GhostProfilePage() {
   const ghost = ghosts.find((profile) => profile.id === ghostId);
   if (!ghost) return <Navigate to="/ghosts" replace />;
   const availability =
-    ghost.status === "Needs review"
-      ? "Needs coordinator review"
-      : ghost.status === "Assigned"
-        ? "Assigned to upcoming event"
-        : "Available for assignment";
+    ghost.status === 'Needs review'
+      ? 'Needs coordinator review'
+      : ghost.status === 'Assigned'
+        ? 'Assigned to upcoming event'
+        : 'Available for assignment';
 
   return (
     <div className="mx-auto max-w-7xl px-5 pb-12 pt-11 sm:px-8 lg:px-12">
@@ -42,28 +42,20 @@ export function GhostProfilePage() {
               <h1 className="text-3xl font-semibold tracking-[-.055em] text-foreground">
                 {ghost.name}
               </h1>
-              <Badge className="border-0 bg-white/10 text-[9px] text-[#e3e1e8]">
-                Active
-              </Badge>
+              <Badge className="border-0 bg-white/10 text-[9px] text-[#e3e1e8]">Active</Badge>
             </div>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {ghost.descriptor}
-            </p>
+            <p className="mt-2 text-sm text-muted-foreground">{ghost.descriptor}</p>
           </div>
         </div>
         <Button
-          onClick={() => notify("Ghost profile editing would open here.")}
+          onClick={() => notify('Ghost profile editing would open here.')}
           className="bg-primary text-primary-foreground hover:bg-primary/90"
         >
           Edit profile
         </Button>
       </div>
       <section className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatusCard
-          label="LIFECYCLE"
-          value="Active"
-          detail="Eligible for assignments"
-        />
+        <StatusCard label="LIFECYCLE" value="Active" detail="Eligible for assignments" />
         <StatusCard
           label="THREAT LEVEL"
           value={ghost.threat}
@@ -88,15 +80,12 @@ export function GhostProfilePage() {
             <p className="text-[10px] font-bold tracking-[.14em] text-muted-foreground">
               UPCOMING ASSIGNMENT
             </p>
-            <CardTitle className="mt-1 text-lg text-foreground">
-              {ghost.nextEvent}
-            </CardTitle>
+            <CardTitle className="mt-1 text-lg text-foreground">{ghost.nextEvent}</CardTitle>
           </CardHeader>
           <CardContent className="border-t border-white/10 pt-5">
-            {ghost.nextEvent === "No upcoming event" ? (
+            {ghost.nextEvent === 'No upcoming event' ? (
               <p className="text-sm text-[#a5a4b4]">
-                This ghost has no upcoming assignment and is available for the
-                next eligible event.
+                This ghost has no upcoming assignment and is available for the next eligible event.
               </p>
             ) : (
               <div className="space-y-4">
@@ -127,15 +116,13 @@ export function GhostProfilePage() {
             <p className="text-[10px] font-bold tracking-[.14em] text-muted-foreground">
               OPEN OPERATIONAL CONCERNS
             </p>
-            <CardTitle className="mt-1 text-lg text-foreground">
-              Current review
-            </CardTitle>
+            <CardTitle className="mt-1 text-lg text-foreground">Current review</CardTitle>
           </CardHeader>
           <CardContent className="border-t border-white/10 pt-5">
             <p className="text-sm text-[#a5a4b4]">
-              {ghost.status === "Needs review"
-                ? "This profile requires coordinator review before another assignment."
-                : "No unresolved operational concerns."}
+              {ghost.status === 'Needs review'
+                ? 'This profile requires coordinator review before another assignment.'
+                : 'No unresolved operational concerns.'}
             </p>
             <Button
               variant="link"
@@ -159,19 +146,15 @@ function StatusCard({
   label: string;
   value: string;
   detail: string;
-  tone?: "mint" | "orange";
+  tone?: 'mint' | 'orange';
 }) {
   return (
     <Card className="py-5 shadow-none">
       <CardContent>
-        <p className="text-[10px] font-bold tracking-[.1em] text-muted-foreground">
-          {label}
-        </p>
-        <p className="mt-3 text-lg font-semibold tracking-[-.03em] text-foreground">
-          {value}
-        </p>
+        <p className="text-[10px] font-bold tracking-[.1em] text-muted-foreground">{label}</p>
+        <p className="mt-3 text-lg font-semibold tracking-[-.03em] text-foreground">{value}</p>
         <p
-          className={`mt-2 text-[11px] ${tone === "mint" ? "text-primary" : tone === "orange" ? "text-orange-300" : "text-muted-foreground"}`}
+          className={`mt-2 text-[11px] ${tone === 'mint' ? 'text-primary' : tone === 'orange' ? 'text-orange-300' : 'text-muted-foreground'}`}
         >
           {detail}
         </p>

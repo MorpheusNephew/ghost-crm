@@ -1,49 +1,49 @@
-import { CalendarDays, Ghost, Sparkles, Waypoints } from "lucide-react";
-import { useNavigate, useOutletContext } from "react-router";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { AppLayoutContext } from "@/layouts/AppLayout";
+import { CalendarDays, Ghost, Sparkles, Waypoints } from 'lucide-react';
+import { useNavigate, useOutletContext } from 'react-router';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { AppLayoutContext } from '@/layouts/AppLayout';
 
 const roster = [
   {
-    name: "Lady Grey",
-    detail: "Grand Hall · 7:00 PM",
-    status: "Confirmed",
-    color: "bg-violet-300 text-violet-950",
-    initial: "L",
+    name: 'Lady Grey',
+    detail: 'Grand Hall · 7:00 PM',
+    status: 'Confirmed',
+    color: 'bg-violet-300 text-violet-950',
+    initial: 'L',
   },
   {
-    name: "The Bellringer",
-    detail: "Clock Tower · 7:30 PM",
-    status: "Confirmed",
-    color: "bg-orange-300 text-orange-950",
-    initial: "B",
+    name: 'The Bellringer',
+    detail: 'Clock Tower · 7:30 PM',
+    status: 'Confirmed',
+    color: 'bg-orange-300 text-orange-950',
+    initial: 'B',
   },
   {
-    name: "Marlow",
-    detail: "West Wing · 8:00 PM",
-    status: "Needs review",
-    color: "bg-emerald-300 text-emerald-950",
-    initial: "M",
+    name: 'Marlow',
+    detail: 'West Wing · 8:00 PM',
+    status: 'Needs review',
+    color: 'bg-emerald-300 text-emerald-950',
+    initial: 'M',
   },
 ];
 
 const sightings = [
   {
-    ghost: "The Watcher",
-    note: "Observed near the east gate",
-    confidence: "High confidence",
+    ghost: 'The Watcher',
+    note: 'Observed near the east gate',
+    confidence: 'High confidence',
   },
   {
-    ghost: "Eleanor Vane",
-    note: "Reported by event staff",
-    confidence: "Medium confidence",
+    ghost: 'Eleanor Vane',
+    note: 'Reported by event staff',
+    confidence: 'Medium confidence',
   },
   {
-    ghost: "The Bellringer",
-    note: "Audio evidence attached",
-    confidence: "High confidence",
+    ghost: 'The Bellringer',
+    note: 'Audio evidence attached',
+    confidence: 'High confidence',
   },
 ];
 
@@ -58,7 +58,7 @@ export function OverviewPage() {
             SATURDAY, OCTOBER 31
           </p>
           <h1 className="text-3xl font-semibold tracking-[-.055em] text-foreground sm:text-4xl">
-            Raven's Hollow operations{" "}
+            Raven's Hollow operations{' '}
             <Sparkles className="inline size-5 fill-[#b8ff70] text-[#b8ff70]" />
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
@@ -73,24 +73,9 @@ export function OverviewPage() {
         className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
         aria-label="Operational summary"
       >
-        <Metric
-          label="UPCOMING EVENTS"
-          value="5"
-          detail="2 this weekend"
-          icon={CalendarDays}
-        />
-        <Metric
-          label="GHOSTS ASSIGNED"
-          value="18"
-          detail="6 on tonight's tour"
-          icon={Ghost}
-        />
-        <Metric
-          label="NEW SIGHTINGS"
-          value="12"
-          detail="3 since last check"
-          icon={Waypoints}
-        />
+        <Metric label="UPCOMING EVENTS" value="5" detail="2 this weekend" icon={CalendarDays} />
+        <Metric label="GHOSTS ASSIGNED" value="18" detail="6 on tonight's tour" icon={Ghost} />
+        <Metric label="NEW SIGHTINGS" value="12" detail="3 since last check" icon={Waypoints} />
         <Metric
           label="SCHEDULING CONFLICTS"
           value="2"
@@ -115,7 +100,7 @@ export function OverviewPage() {
             </div>
             <Button
               variant="link"
-              onClick={() => navigate("/events")}
+              onClick={() => navigate('/events')}
               className="h-auto p-0 text-xs text-primary hover:text-primary/80"
             >
               View event →
@@ -137,15 +122,11 @@ export function OverviewPage() {
                   {ghost.initial}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-semibold text-[#e9e6ed]">
-                    {ghost.name}
-                  </p>
-                  <p className="mt-1 text-[10px] text-[#88899b]">
-                    {ghost.detail}
-                  </p>
+                  <p className="text-xs font-semibold text-[#e9e6ed]">{ghost.name}</p>
+                  <p className="mt-1 text-[10px] text-[#88899b]">{ghost.detail}</p>
                 </div>
                 <Badge
-                  className={`border-0 text-[9px] ${ghost.status === "Needs review" ? "bg-orange-300 text-orange-950" : "bg-emerald-300 text-emerald-950"}`}
+                  className={`border-0 text-[9px] ${ghost.status === 'Needs review' ? 'bg-orange-300 text-orange-950' : 'bg-emerald-300 text-emerald-950'}`}
                 >
                   {ghost.status}
                 </Badge>
@@ -159,13 +140,11 @@ export function OverviewPage() {
               <p className="text-[10px] font-bold tracking-[.14em] text-muted-foreground">
                 RECENT SIGHTINGS
               </p>
-              <CardTitle className="mt-1 text-lg text-foreground">
-                Field reports
-              </CardTitle>
+              <CardTitle className="mt-1 text-lg text-foreground">Field reports</CardTitle>
             </div>
             <Button
               variant="link"
-              onClick={() => navigate("/sightings")}
+              onClick={() => navigate('/sightings')}
               className="h-auto p-0 text-xs text-primary hover:text-primary/80"
             >
               View sightings →
@@ -173,16 +152,9 @@ export function OverviewPage() {
           </CardHeader>
           <CardContent className="pt-2">
             {sightings.map((sighting) => (
-              <div
-                key={sighting.ghost}
-                className="border-t border-white/10 py-3.5"
-              >
-                <p className="text-xs font-semibold text-[#e9e6ed]">
-                  {sighting.ghost}
-                </p>
-                <p className="mt-1 text-[10px] text-[#88899b]">
-                  {sighting.note}
-                </p>
+              <div key={sighting.ghost} className="border-t border-white/10 py-3.5">
+                <p className="text-xs font-semibold text-[#e9e6ed]">{sighting.ghost}</p>
+                <p className="mt-1 text-[10px] text-[#88899b]">{sighting.note}</p>
                 <Badge className="mt-2 border-0 bg-violet-300 text-[9px] text-violet-950">
                   {sighting.confidence}
                 </Badge>
@@ -203,7 +175,7 @@ export function OverviewPage() {
           </div>
           <Button
             variant="link"
-            onClick={() => notify("Full activity history would open here.")}
+            onClick={() => notify('Full activity history would open here.')}
             className="h-auto p-0 text-xs text-primary hover:text-primary/80"
           >
             View timeline →
@@ -229,31 +201,25 @@ function Metric({
   label,
   value,
   detail,
-  tone = "mint",
+  tone = 'mint',
   icon: Icon,
 }: {
   label: string;
   value: string;
   detail: string;
-  tone?: "mint" | "orange";
+  tone?: 'mint' | 'orange';
   icon: typeof Ghost;
 }) {
   return (
     <Card className="py-5 shadow-none">
       <CardContent>
         <div className="flex items-center justify-between">
-          <p className="text-[10px] font-bold tracking-[.1em] text-muted-foreground">
-            {label}
-          </p>
+          <p className="text-[10px] font-bold tracking-[.1em] text-muted-foreground">{label}</p>
           <Icon className="size-4 text-[#858698]" />
         </div>
-        <p className="mt-3 text-2xl font-semibold tracking-[-.04em] text-foreground">
-          {value}
-        </p>
-        <p
-          className={`mt-2 text-[11px] ${tone === "mint" ? "text-primary" : "text-orange-300"}`}
-        >
-          {tone === "mint" ? "↗" : "✦"} {detail}
+        <p className="mt-3 text-2xl font-semibold tracking-[-.04em] text-foreground">{value}</p>
+        <p className={`mt-2 text-[11px] ${tone === 'mint' ? 'text-primary' : 'text-orange-300'}`}>
+          {tone === 'mint' ? '↗' : '✦'} {detail}
         </p>
       </CardContent>
     </Card>
