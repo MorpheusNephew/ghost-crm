@@ -48,6 +48,7 @@ export const demoEvents: EventDetail[] = [
 
 export const listDemoEvents = (): EventSummary[] =>
   demoEvents.map(({ roster: _roster, ...event }) => eventSummarySchema.parse(event));
+
 export const getDemoEvent = (eventId: string): EventDetail | undefined => {
   const event = demoEvents.find((candidate) => candidate.id === eventId);
   return event ? eventDetailSchema.parse(event) : undefined;

@@ -49,6 +49,17 @@ export type EventDetailResponse = {
   };
 };
 
+export type GhostListResponse = {
+  ghosts: Array<{
+    id: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+    lifecycle: 'active' | 'inactive';
+    threatLevel: 'low' | 'moderate' | 'high';
+  }>;
+};
+
 export type ErrorResponse = {
   error: string;
 };
@@ -68,6 +79,22 @@ export type GetHealthResponses = {
 };
 
 export type GetHealthResponse = GetHealthResponses[keyof GetHealthResponses];
+
+export type ListGhostsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: '/api/ghosts';
+};
+
+export type ListGhostsResponses = {
+  /**
+   * The available ghost profiles.
+   */
+  200: GhostListResponse;
+};
+
+export type ListGhostsResponse = ListGhostsResponses[keyof ListGhostsResponses];
 
 export type ListEventsData = {
   body?: never;

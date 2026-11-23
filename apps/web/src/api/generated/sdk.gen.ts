@@ -10,6 +10,8 @@ import type {
   GetHealthResponses,
   ListEventsData,
   ListEventsResponses,
+  ListGhostsData,
+  ListGhostsResponses,
 } from './types.gen';
 
 export type Options<
@@ -38,6 +40,17 @@ export const getHealth = <ThrowOnError extends boolean = false>(
 ): RequestResult<GetHealthResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetHealthResponses, unknown, ThrowOnError>({
     url: '/health',
+    ...options,
+  });
+
+/**
+ * List ghosts
+ */
+export const listGhosts = <ThrowOnError extends boolean = false>(
+  options?: Options<ListGhostsData, ThrowOnError>,
+): RequestResult<ListGhostsResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<ListGhostsResponses, unknown, ThrowOnError>({
+    url: '/api/ghosts',
     ...options,
   });
 

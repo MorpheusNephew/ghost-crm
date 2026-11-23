@@ -3,7 +3,11 @@ import {
   OpenAPIRegistry,
   OpenApiGeneratorV31,
 } from '@asteasolutions/zod-to-openapi';
-import { eventDetailResponseSchema, eventListResponseSchema } from '@ghost-crm/contracts';
+import {
+  eventDetailResponseSchema,
+  eventListResponseSchema,
+  ghostListResponseSchema,
+} from '@ghost-crm/contracts';
 import { z } from 'zod';
 
 extendZodWithOpenApi(z);
@@ -19,6 +23,7 @@ const healthResponseSchema = registry.register(
 );
 const eventListResponse = registry.register('EventListResponse', eventListResponseSchema);
 const eventDetailResponse = registry.register('EventDetailResponse', eventDetailResponseSchema);
+const ghostListResponse = registry.register('GhostListResponse', ghostListResponseSchema);
 const eventIdParamsSchema = z.object({ eventId: z.string().min(1) });
 const errorResponseSchema = registry.register('ErrorResponse', z.object({ error: z.string() }));
 
@@ -31,6 +36,20 @@ registry.registerPath({
     200: {
       description: 'The CRM service is available.',
       content: { 'application/json': { schema: healthResponseSchema } },
+    },
+  },
+});
+
+registry.registerPath({
+  method: 'get',
+  path: '/api/ghosts',
+  operationId: 'listGhosts',
+  summary: 'List ghosts',
+  tags: ['Ghosts'],
+  responses: {
+    200: {
+      description: 'The available ghost profiles.',
+      content: { 'application/json': { schema: ghostListResponse } },
     },
   },
 });
@@ -75,5 +94,8 @@ export const openApiDocument = new OpenApiGeneratorV31(registry.definitions).gen
     version: '0.1.0',
     description: 'The API for the Ghost CRM scheduling service.',
   },
-  tags: [{ name: 'Events', description: 'Event scheduling and roster data.' }],
+  tags: [
+    { name: 'Events', description: 'Event scheduling and roster data.' },
+    { name: 'Ghosts', description: 'Ghost profile data.' },
+  ],
 });

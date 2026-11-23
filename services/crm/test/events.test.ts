@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getDemoEvent, listDemoEvents } from '../src/events';
+import { getDemoEvent, listDemoEvents } from '../src/data/events';
 
 describe('demo event service', () => {
   it('returns summaries without roster details', () => {

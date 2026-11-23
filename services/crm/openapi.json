@@ -9,6 +9,10 @@
     {
       "name": "Events",
       "description": "Event scheduling and roster data."
+    },
+    {
+      "name": "Ghosts",
+      "description": "Ghost profile data."
     }
   ],
   "components": {
@@ -175,6 +179,42 @@
         },
         "required": ["event"]
       },
+      "GhostListResponse": {
+        "type": "object",
+        "properties": {
+          "ghosts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "lifecycle": {
+                  "type": "string",
+                  "enum": ["active", "inactive"]
+                },
+                "threatLevel": {
+                  "type": "string",
+                  "enum": ["low", "moderate", "high"]
+                }
+              },
+              "required": ["id", "name", "description", "imageUrl", "lifecycle", "threatLevel"]
+            }
+          }
+        },
+        "required": ["ghosts"]
+      },
       "ErrorResponse": {
         "type": "object",
         "properties": {
@@ -199,6 +239,25 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ghosts": {
+      "get": {
+        "operationId": "listGhosts",
+        "summary": "List ghosts",
+        "tags": ["Ghosts"],
+        "responses": {
+          "200": {
+            "description": "The available ghost profiles.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GhostListResponse"
                 }
               }
             }

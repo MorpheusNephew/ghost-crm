@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getDemoEvent, listDemoEvents } from '../events';
+import { getDemoEvent, listDemoEvents } from '../data/events';
 
 export const eventsRouter = Router();
 
