@@ -98,7 +98,7 @@ registry.registerPath({
   method: 'get',
   path: '/api/ghosts',
   operationId: 'listGhosts',
-  summary: 'List all ghosts for CI verification',
+  summary: 'List ghosts',
   tags: ['Ghosts'],
   responses: {
     200: {
