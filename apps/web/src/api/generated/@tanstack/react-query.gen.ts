@@ -3,7 +3,7 @@
 import { type DefaultError, queryOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { getEvent, getHealth, listEvents, type Options } from '../sdk.gen';
+import { getEvent, getHealth, listEvents, listGhosts, type Options } from '../sdk.gen';
 import type {
   GetEventData,
   GetEventError,
@@ -12,6 +12,8 @@ import type {
   GetHealthResponse,
   ListEventsData,
   ListEventsResponse,
+  ListGhostsData,
+  ListGhostsResponse,
 } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -76,6 +78,31 @@ export const getHealthOptions = (options?: Options<GetHealthData>) =>
       return data;
     },
     queryKey: getHealthQueryKey(options),
+  });
+
+export const listGhostsQueryKey = (options?: Options<ListGhostsData>) =>
+  createQueryKey('listGhosts', options);
+
+/**
+ * List ghosts
+ */
+export const listGhostsOptions = (options?: Options<ListGhostsData>) =>
+  queryOptions<
+    ListGhostsResponse,
+    DefaultError,
+    ListGhostsResponse,
+    ReturnType<typeof listGhostsQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await listGhosts({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: listGhostsQueryKey(options),
   });
 
 export const listEventsQueryKey = (options?: Options<ListEventsData>) =>

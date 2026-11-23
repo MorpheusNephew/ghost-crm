@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ghosts } from '@/lib/ghosts';
+import { useGhosts } from '@/hooks/use-ghosts';
 
 export function GhostsPage() {
   const navigate = useNavigate();
+  const { ghosts, isError, isLoading } = useGhosts();
 
   return (
     <div className="mx-auto max-w-7xl px-5 pb-12 pt-11 sm:px-8 lg:px-12">
@@ -19,7 +20,7 @@ export function GhostsPage() {
             Ghost profiles
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Monitor operational status and upcoming assignments.
+            Monitor lifecycle and threat level for your ghost directory.
           </p>
         </div>
       </div>
@@ -28,36 +29,33 @@ export function GhostsPage() {
           variant="outline"
           className="border-input bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
         >
-          <SlidersHorizontal /> Filters{' '}
-          <Badge className="ml-1 border-0 bg-violet-300 text-[9px] text-violet-950">2</Badge>
+          <SlidersHorizontal /> Filters
         </Button>
       </div>
+      {isLoading ? <p className="text-sm text-muted-foreground">Loading ghosts...</p> : null}
+      {isError ? <p className="text-sm text-destructive">Unable to load ghosts.</p> : null}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {ghosts.map((ghost) => (
+        {ghosts.map((ghost, index) => (
           <Card key={ghost.id} className="shadow-none">
             <CardContent className="pt-4">
               <div className="flex items-start justify-between">
                 <span
-                  className={`grid size-10 place-items-center rounded-full text-sm font-bold ${ghost.color}`}
+                  className={`grid size-10 place-items-center rounded-full text-sm font-bold ${avatarTone(index)}`}
                 >
-                  {ghost.initial}
+                  {ghost.name.at(0)}
                 </span>
-                <ThreatBadge level={ghost.threat} />
+                <ThreatBadge level={ghost.threatLevel} />
               </div>
               <h2 className="mt-4 text-base font-semibold text-foreground">{ghost.name}</h2>
-              <p className="mt-1 text-xs text-muted-foreground">{ghost.descriptor}</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {ghost.description} - {ghost.lifecycle}
+              </p>
               <div className="mt-5 space-y-3 border-t border-border pt-4 text-xs">
                 <p className="text-muted-foreground">
                   <span className="block text-[9px] font-bold tracking-[.1em] text-muted-foreground">
                     AVAILABILITY
                   </span>
-                  {ghost.status === 'Assigned' ? 'Scheduled' : 'Available'}
-                </p>
-                <p className="text-muted-foreground">
-                  <span className="block text-[9px] font-bold tracking-[.1em] text-muted-foreground">
-                    NEXT EVENT
-                  </span>
-                  {ghost.nextEvent}
+                  {ghost.lifecycle === 'active' ? 'Available' : 'Inactive'}
                 </p>
               </div>
               <Button
@@ -75,12 +73,23 @@ export function GhostsPage() {
   );
 }
 
-function ThreatBadge({ level }: { level: string }) {
+function ThreatBadge({ level }: { level: 'low' | 'moderate' | 'high' }) {
   const colors =
-    level === 'High'
+    level === 'high'
       ? 'bg-red-300 text-red-950'
-      : level === 'Moderate'
+      : level === 'moderate'
         ? 'bg-orange-300 text-orange-950'
         : 'bg-emerald-300 text-emerald-950';
   return <Badge className={`border-0 text-[9px] ${colors}`}>{level}</Badge>;
+}
+
+function avatarTone(index: number) {
+  const tones = [
+    'bg-violet-300 text-violet-950',
+    'bg-orange-300 text-orange-950',
+    'bg-emerald-300 text-emerald-950',
+    'bg-sky-300 text-sky-950',
+  ];
+
+  return tones[index % tones.length];
 }

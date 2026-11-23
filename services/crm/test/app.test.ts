@@ -20,6 +20,15 @@ describe('CRM application', () => {
     expect(response.body.events[0]).not.toHaveProperty('roster');
   });
 
+  it('lists ghost summaries', async () => {
+    const response = await request(app).get('/api/ghosts');
+
+    expect(response.status).toBe(200);
+    expect(response.body.ghosts).toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: 'lady-grey', name: 'Lady Grey' })]),
+    );
+  });
+
   it('returns an event detail and reports missing events', async () => {
     const detail = await request(app).get('/api/events/ravens-hollow-haunted-tour');
     const missing = await request(app).get('/api/events/missing-event');
@@ -39,6 +48,7 @@ describe('CRM application', () => {
       '/health': expect.any(Object),
       '/api/events': expect.any(Object),
       '/api/events/{eventId}': expect.any(Object),
+      '/api/ghosts': expect.any(Object),
     });
   });
 });
