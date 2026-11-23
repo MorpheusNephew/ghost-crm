@@ -9,7 +9,7 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
-    "@ghost-crm/contracts": "file:../../packages/contracts",
+    "@ghost-crm/contracts": "workspace:*",
     "express": "^5.3.0",
     "zod": "^4.6.7"
   },

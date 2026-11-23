@@ -8,8 +8,8 @@ export const eventSummarySchema = z.object({
   title: z.string(),
   description: z.string(),
   status: eventStatusSchema,
-  startsAt: z.iso.datetime(),
-  endsAt: z.iso.datetime(),
+  startsAt: z.iso.datetime({ offset: true }),
+  endsAt: z.iso.datetime({ offset: true }),
   venue: venueSchema,
   ghostCount: z.number().int().nonnegative(),
 });
