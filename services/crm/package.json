@@ -4,11 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "pnpm run typecheck && esbuild src/server.ts --bundle --platform=node --format=esm --target=node24 --packages=external --sourcemap --outfile=dist/server.js",
     "dev": "tsx watch src/server.ts",
-    "start": "node dist/server.js"
+    "generate:openapi": "tsx src/openapi/generate.ts",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^9.1.0",
     "@ghost-crm/contracts": "workspace:*",
     "express": "^5.3.0",
     "zod": "^4.6.7"
@@ -16,6 +19,7 @@
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.6",
+    "esbuild": "^0.28.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }

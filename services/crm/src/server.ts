@@ -1,12 +1,7 @@
-import express from 'express';
-import { eventsRouter } from './routers/events.js';
-import { healthRouter } from './routers/health.js';
+import { createApp } from './app';
 
-const app = express();
+const app = createApp();
 const port = Number(process.env.PORT ?? 3000);
-
-app.use('/health', healthRouter);
-app.use('/api/events', eventsRouter);
 
 const server = app.listen(port, () => {
   console.info(`CRM service listening on port ${port}`);

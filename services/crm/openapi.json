@@ -1,0 +1,270 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Ghost CRM API",
+    "version": "0.1.0",
+    "description": "The API for the Ghost CRM scheduling service."
+  },
+  "tags": [
+    {
+      "name": "Events",
+      "description": "Event scheduling and roster data."
+    }
+  ],
+  "components": {
+    "schemas": {
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "service": {
+            "type": "string",
+            "enum": ["crm"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["ok"]
+          }
+        },
+        "required": ["service", "status"]
+      },
+      "EventListResponse": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["draft", "scheduled", "cancelled"]
+                },
+                "startsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "endsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "venue": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "address": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["id", "name", "address"]
+                },
+                "ghostCount": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "description",
+                "status",
+                "startsAt",
+                "endsAt",
+                "venue",
+                "ghostCount"
+              ]
+            }
+          }
+        },
+        "required": ["events"]
+      },
+      "EventDetailResponse": {
+        "type": "object",
+        "properties": {
+          "event": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["draft", "scheduled", "cancelled"]
+              },
+              "startsAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "endsAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "venue": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  }
+                },
+                "required": ["id", "name", "address"]
+              },
+              "ghostCount": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "roster": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "attendance": {
+                      "type": "string",
+                      "enum": ["pending", "attended", "no_show"]
+                    },
+                    "note": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["id", "name", "attendance"]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "description",
+              "status",
+              "startsAt",
+              "endsAt",
+              "venue",
+              "ghostCount",
+              "roster"
+            ]
+          }
+        },
+        "required": ["event"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": ["error"]
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "getHealth",
+        "summary": "Check CRM service health",
+        "responses": {
+          "200": {
+            "description": "The CRM service is available.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/events": {
+      "get": {
+        "operationId": "listEvents",
+        "summary": "List events",
+        "tags": ["Events"],
+        "responses": {
+          "200": {
+            "description": "The available events.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/events/{eventId}": {
+      "get": {
+        "operationId": "getEvent",
+        "summary": "Get an event",
+        "tags": ["Events"],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "required": true,
+            "name": "eventId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The event and its roster.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No event matches the provided identifier.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {}
+}

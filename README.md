@@ -101,6 +101,24 @@ Ghost CRM is intentionally designed to make these engineering decisions visible:
 - Full-text search where relational search no longer meets product needs.
 - Observability, operational dashboards, and incident-oriented runbooks.
 
+## API contracts and generated client
+
+The shared Zod schemas in `packages/contracts` define CRM response shapes. The CRM service
+uses those schemas to generate and serve an OpenAPI 3.1 document at `/openapi.json`.
+
+Regenerate the checked-in OpenAPI document and the web application's typed fetch client and
+TanStack Query options after changing an API contract:
+
+```sh
+pnpm generate:client
+```
+
+The generated client is in `apps/web/src/api/generated`. Application code should import its
+query options rather than hand-writing fetch calls for documented CRM endpoints.
+
+When running Docker Compose, the web service proxies `/api` and `/openapi.json` to the CRM
+service. This keeps the browser on one origin in both development and production.
+
 ## Status
 
 Ghost CRM is currently in product-definition and architecture-planning. This README describes the intended product and engineering scope; implementation details and local setup instructions will be added as the application is built.

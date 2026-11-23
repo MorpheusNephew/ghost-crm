@@ -11,4 +11,10 @@ export default defineConfig({
       '@': path.resolve(import.meta.dirname, './src'),
     },
   },
+  server: {
+    proxy: {
+      '/api': process.env.VITE_CRM_API_PROXY_TARGET ?? 'http://localhost:3000',
+      '/openapi.json': process.env.VITE_CRM_API_PROXY_TARGET ?? 'http://localhost:3000',
+    },
+  },
 });

@@ -11,21 +11,26 @@ services:
     volumes:
       - ./services/crm:/workspace/services/crm
       - ./packages/contracts:/workspace/packages/contracts
-      - workspace_node_modules:/workspace/node_modules
+      - crm_workspace_node_modules:/workspace/node_modules
       - crm_api_node_modules:/workspace/services/crm/node_modules
 
   web:
     build:
       target: development
-    command: pnpm --filter web exec vite --host 0.0.0.0
+    command: >-
+      sh -c "pnpm install --frozen-lockfile --filter web... &&
+      pnpm --filter web exec vite --host 0.0.0.0"
+    environment:
+      VITE_CRM_API_PROXY_TARGET: http://crm-api:3000
     ports:
       - '5173:5173'
     volumes:
       - ./apps/web:/workspace/apps/web
-      - workspace_node_modules:/workspace/node_modules
+      - web_workspace_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/apps/web/node_modules
 
 volumes:
-  workspace_node_modules:
+  crm_workspace_node_modules:
+  web_workspace_node_modules:
   crm_api_node_modules:
   web_node_modules:

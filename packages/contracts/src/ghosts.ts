@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from './openapi.js';
 
 export const ghostSummarySchema = z.object({
   id: z.string(),

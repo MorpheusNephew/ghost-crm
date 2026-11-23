@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from './openapi.js';
 import { venueSchema } from './venues.js';
 
 export const eventStatusSchema = z.enum(['draft', 'scheduled', 'cancelled']);
