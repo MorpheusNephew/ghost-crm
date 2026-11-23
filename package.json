@@ -1,9 +1,12 @@
 {
   "name": "ghost-crm",
   "private": true,
+  "packageManager": "pnpm@10.33.4",
   "scripts": {
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "generate:openapi": "pnpm --filter @ghost-crm/contracts build && pnpm --filter @ghost-crm/crm generate:openapi && prettier --write services/crm/openapi.json",
+    "generate:client": "pnpm run generate:openapi && pnpm --filter web generate:api"
   },
   "devDependencies": {
     "prettier": "^3.10.1"

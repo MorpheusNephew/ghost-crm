@@ -1,14 +1,7 @@
-import express from 'express';
+import { createApp } from './app';
 
-const app = express();
+const app = createApp();
 const port = Number(process.env.PORT ?? 3000);
-
-app.get('/health', (_request, response) => {
-  response.status(200).json({
-    service: 'crm',
-    status: 'ok',
-  });
-});
 
 const server = app.listen(port, () => {
   console.info(`CRM service listening on port ${port}`);

@@ -2,27 +2,35 @@ services:
   crm-api:
     build:
       target: development
-    # Keep dependencies in a named volume while the source bind mount enables
-    # tsx watch mode to reload the service after local edits.
-    command: sh -c "npm ci && npm run dev"
+    command: >-
+      sh -c "pnpm install --frozen-lockfile --filter @ghost-crm/crm... &&
+      pnpm --filter @ghost-crm/contracts build &&
+      pnpm --filter @ghost-crm/crm dev"
     ports:
       - '3000:3000'
     volumes:
       - ./services/crm:/workspace/services/crm
+      - ./packages/contracts:/workspace/packages/contracts
+      - crm_workspace_node_modules:/workspace/node_modules
       - crm_api_node_modules:/workspace/services/crm/node_modules
 
   web:
     build:
       target: development
-    # The named node_modules volume persists across restarts. Sync it from the
-    # lockfile before Vite starts so newly added packages are available.
-    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0"
+    command: >-
+      sh -c "pnpm install --frozen-lockfile --filter web... &&
+      pnpm --filter web exec vite --host 0.0.0.0"
+    environment:
+      VITE_CRM_API_PROXY_TARGET: http://crm-api:3000
     ports:
       - '5173:5173'
     volumes:
       - ./apps/web:/workspace/apps/web
+      - web_workspace_node_modules:/workspace/node_modules
       - web_node_modules:/workspace/apps/web/node_modules
 
 volumes:
+  crm_workspace_node_modules:
+  web_workspace_node_modules:
   crm_api_node_modules:
   web_node_modules:
