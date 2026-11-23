@@ -1,7 +1,11 @@
 {
   "name": "ghost-crm",
   "private": true,
-  "workspaces": ["apps/*", "services/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check ."
