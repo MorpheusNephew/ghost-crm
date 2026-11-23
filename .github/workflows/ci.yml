@@ -69,6 +69,7 @@ jobs:
           node-version: 24.22.3
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @ghost-crm/contracts build
       - run: pnpm --filter @ghost-crm/crm test:coverage
 
   web-tests:
