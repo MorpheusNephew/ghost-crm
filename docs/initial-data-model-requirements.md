@@ -20,6 +20,9 @@ Create a one-time event at one venue
   or edit them in version one.
 - Version one uses fixed demo coordinator and staff users; user creation and
   invitation management are deferred.
+- The first backend slice serves fixed demo data; persistence is deferred.
+- The first API is read-only and supports an event list plus an event-detail
+  response before creation or attendance updates are added.
 - Events are one-time and occur at one venue.
 - A coordinator creates events with a title, description, date, time, venue,
   and one or more scheduled demo ghosts.
