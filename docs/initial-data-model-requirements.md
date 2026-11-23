@@ -62,4 +62,3 @@ Create a one-time event at one venue
   demonstrated workflow.
 
 ## Open questions
-

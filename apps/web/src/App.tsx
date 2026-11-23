@@ -1,12 +1,12 @@
-import { Navigate, Route, Routes } from "react-router";
-import { AppLayout } from "@/layouts/AppLayout";
-import { ComingSoonPage } from "@/pages/ComingSoonPage";
-import { GhostProfilePage } from "@/pages/GhostProfilePage";
-import { GhostsPage } from "@/pages/GhostsPage";
-import { EventCreatePage } from "@/pages/EventCreatePage";
-import { EventDetailPage } from "@/pages/EventDetailPage";
-import { EventsPage } from "@/pages/EventsPage";
-import { OverviewPage } from "@/pages/OverviewPage";
+import { Navigate, Route, Routes } from 'react-router';
+import { AppLayout } from '@/layouts/AppLayout';
+import { ComingSoonPage } from '@/pages/ComingSoonPage';
+import { GhostProfilePage } from '@/pages/GhostProfilePage';
+import { GhostsPage } from '@/pages/GhostsPage';
+import { EventCreatePage } from '@/pages/EventCreatePage';
+import { EventDetailPage } from '@/pages/EventDetailPage';
+import { EventsPage } from '@/pages/EventsPage';
+import { OverviewPage } from '@/pages/OverviewPage';
 
 function App() {
   return (

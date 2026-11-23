@@ -1,1 +1,12 @@
-{"name":"ghost-crm","private":true,"workspaces":["apps/*","services/*","packages/*"]}
+{
+  "name": "ghost-crm",
+  "private": true,
+  "workspaces": ["apps/*", "services/*", "packages/*"],
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.10.1"
+  }
+}

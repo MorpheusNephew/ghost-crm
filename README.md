@@ -29,12 +29,12 @@ An organizer should be able to answer questions such as:
 
 ### Users
 
-| Role | Responsibilities |
-| --- | --- |
-| Organization administrator | Manages members, roles, settings, and venues. |
-| Event coordinator | Plans events, assigns ghosts, and runs campaigns. |
-| Investigator or volunteer | Records sightings and operational notes. |
-| Read-only collaborator | Reviews histories and event details without editing data. |
+| Role                       | Responsibilities                                          |
+| -------------------------- | --------------------------------------------------------- |
+| Organization administrator | Manages members, roles, settings, and venues.             |
+| Event coordinator          | Plans events, assigns ghosts, and runs campaigns.         |
+| Investigator or volunteer  | Records sightings and operational notes.                  |
+| Read-only collaborator     | Reviews histories and event details without editing data. |
 
 ## Design principles
 
