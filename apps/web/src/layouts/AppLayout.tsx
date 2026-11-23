@@ -6,11 +6,9 @@ import {
   Ghost,
   LayoutDashboard,
   Search,
-  Send,
   Sparkles,
-  Waypoints,
 } from 'lucide-react';
-import { NavLink, Outlet, useLocation } from 'react-router';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ghosts } from '@/lib/ghosts';
@@ -21,13 +19,12 @@ const navigation = [
   { label: 'Overview', icon: LayoutDashboard, path: '/' },
   { label: 'Ghosts', icon: Ghost, path: '/ghosts' },
   { label: 'Events', icon: CalendarDays, path: '/events' },
-  { label: 'Sightings', icon: Waypoints, path: '/sightings' },
-  { label: 'Campaigns', icon: Send, path: '/campaigns' },
 ];
 
 export function AppLayout() {
   const [notice, setNotice] = useState('');
   const location = useLocation();
+  const navigate = useNavigate();
   const notify = (message: string) => {
     setNotice(message);
     window.setTimeout(() => setNotice(''), 2400);
@@ -86,12 +83,12 @@ export function AppLayout() {
             <div className="relative w-full max-w-sm">
               <Search className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                aria-label="Search ghosts, events, and sightings"
-                placeholder="Search ghosts, events, sightings…"
+                aria-label="Search ghosts and events"
+                placeholder="Search ghosts and events..."
                 className="border-input bg-muted pl-9 pr-12 text-foreground placeholder:text-muted-foreground"
               />
               <kbd className="absolute right-2 top-1/2 hidden -translate-y-1/2 rounded bg-background px-1.5 py-0.5 text-[10px] font-normal text-muted-foreground sm:inline">
-                ⌘ K
+                Cmd K
               </kbd>
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
@@ -106,11 +103,11 @@ export function AppLayout() {
                 <span className="absolute right-2 top-2 size-1.5 rounded-full bg-primary" />
               </Button>
               <Button
-                onClick={() => notify('A new ghost profile form would open here.')}
+                onClick={() => navigate('/events/new')}
                 className="bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 <span className="text-lg leading-none">+</span>
-                <span className="hidden sm:inline">Add ghost</span>
+                <span className="hidden sm:inline">New event</span>
               </Button>
             </div>
           </header>
