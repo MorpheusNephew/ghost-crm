@@ -1,28 +1,12 @@
 import express from 'express';
-import { getDemoEvent, listDemoEvents } from './events.js';
+import { eventsRouter } from './routers/events.js';
+import { healthRouter } from './routers/health.js';
 
 const app = express();
 const port = Number(process.env.PORT ?? 3000);
 
-app.get('/health', (_request, response) => {
-  response.status(200).json({
-    service: 'crm',
-    status: 'ok',
-  });
-});
-
-app.get('/api/events', (_request, response) => {
-  response.status(200).json({ events: listDemoEvents() });
-});
-
-app.get('/api/events/:eventId', (request, response) => {
-  const event = getDemoEvent(request.params.eventId);
-  if (!event) {
-    response.status(404).json({ error: 'Event not found' });
-    return;
-  }
-  response.status(200).json({ event });
-});
+app.use('/health', healthRouter);
+app.use('/api/events', eventsRouter);
 
 const server = app.listen(port, () => {
   console.info(`CRM service listening on port ${port}`);
