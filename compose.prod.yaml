@@ -1,5 +1,5 @@
 services:
-  crm:
+  crm-api:
     build:
       target: production
 

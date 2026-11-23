@@ -1,5 +1,5 @@
 services:
-  crm:
+  crm-api:
     build:
       target: development
     # Keep dependencies in a named volume while the source bind mount enables
@@ -9,7 +9,7 @@ services:
       - "3000:3000"
     volumes:
       - ./services/crm:/workspace/services/crm
-      - crm_node_modules:/workspace/services/crm/node_modules
+      - crm_api_node_modules:/workspace/services/crm/node_modules
 
   web:
     build:
@@ -24,5 +24,5 @@ services:
       - web_node_modules:/workspace/apps/web/node_modules
 
 volumes:
-  crm_node_modules:
+  crm_api_node_modules:
   web_node_modules:

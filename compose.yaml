@@ -1,5 +1,5 @@
 services:
-  crm:
+  crm-api:
     build:
       context: .
       dockerfile: services/crm/Dockerfile
