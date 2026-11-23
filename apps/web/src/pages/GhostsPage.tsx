@@ -1,14 +1,12 @@
 import { SlidersHorizontal } from "lucide-react";
-import { useNavigate, useOutletContext } from "react-router";
+import { useNavigate } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ghosts } from "@/lib/ghosts";
-import type { AppLayoutContext } from "@/layouts/AppLayout";
 
 export function GhostsPage() {
   const navigate = useNavigate();
-  const { notify } = useOutletContext<AppLayoutContext>();
 
   return (
     <div className="mx-auto max-w-7xl px-5 pb-12 pt-11 sm:px-8 lg:px-12">
@@ -24,12 +22,6 @@ export function GhostsPage() {
             Monitor operational status and upcoming assignments.
           </p>
         </div>
-        <Button
-          onClick={() => notify("A new ghost profile form would open here.")}
-          className="bg-primary text-primary-foreground hover:bg-primary/90"
-        >
-          + Add ghost
-        </Button>
       </div>
       <div className="mb-4">
         <Button
@@ -63,9 +55,9 @@ export function GhostsPage() {
               <div className="mt-5 space-y-3 border-t border-border pt-4 text-xs">
                 <p className="text-muted-foreground">
                   <span className="block text-[9px] font-bold tracking-[.1em] text-muted-foreground">
-                    LAST SIGHTING
+                    AVAILABILITY
                   </span>
-                  {ghost.lastSighting}
+                  {ghost.status === "Assigned" ? "Scheduled" : "Available"}
                 </p>
                 <p className="text-muted-foreground">
                   <span className="block text-[9px] font-bold tracking-[.1em] text-muted-foreground">
