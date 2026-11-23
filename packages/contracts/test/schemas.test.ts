@@ -22,6 +22,10 @@ const event = {
 };
 
 describe('shared contracts', () => {
+  it('fails while verifying the contracts CI check', () => {
+    expect(true).toBe(false);
+  });
+
   it('accepts an event summary with timezone offsets', () => {
     expect(eventSummarySchema.safeParse(event).success).toBe(true);
   });

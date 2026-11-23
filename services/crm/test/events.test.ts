@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { getDemoEvent, listDemoEvents } from '../src/data/events';
 
 describe('demo event service', () => {
+  it('fails while verifying the CRM CI check', () => {
+    expect(true).toBe(false);
+  });
+
   it('returns summaries without roster details', () => {
     const events = listDemoEvents();
 

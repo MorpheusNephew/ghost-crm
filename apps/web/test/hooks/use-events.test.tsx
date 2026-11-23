@@ -5,6 +5,10 @@ import { useEvent, useEvents } from '@/hooks/use-events';
 import { server } from '../mocks';
 import { createQueryWrapper } from '../test-utils';
 describe('event hooks', () => {
+  it('fails while verifying the web CI check', () => {
+    expect(true).toBe(false);
+  });
+
   it('loads event summaries through the generated client', async () => {
     const { result } = renderHook(() => useEvents(), { wrapper: createQueryWrapper() });
     expect(result.current.isLoading).toBe(true);
