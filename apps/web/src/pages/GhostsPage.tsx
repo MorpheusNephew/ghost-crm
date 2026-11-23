@@ -1,9 +1,9 @@
-import { SlidersHorizontal } from "lucide-react";
-import { useNavigate } from "react-router";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ghosts } from "@/lib/ghosts";
+import { SlidersHorizontal } from 'lucide-react';
+import { useNavigate } from 'react-router';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { ghosts } from '@/lib/ghosts';
 
 export function GhostsPage() {
   const navigate = useNavigate();
@@ -28,10 +28,8 @@ export function GhostsPage() {
           variant="outline"
           className="border-input bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
         >
-          <SlidersHorizontal /> Filters{" "}
-          <Badge className="ml-1 border-0 bg-violet-300 text-[9px] text-violet-950">
-            2
-          </Badge>
+          <SlidersHorizontal /> Filters{' '}
+          <Badge className="ml-1 border-0 bg-violet-300 text-[9px] text-violet-950">2</Badge>
         </Button>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -46,18 +44,14 @@ export function GhostsPage() {
                 </span>
                 <ThreatBadge level={ghost.threat} />
               </div>
-              <h2 className="mt-4 text-base font-semibold text-foreground">
-                {ghost.name}
-              </h2>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {ghost.descriptor}
-              </p>
+              <h2 className="mt-4 text-base font-semibold text-foreground">{ghost.name}</h2>
+              <p className="mt-1 text-xs text-muted-foreground">{ghost.descriptor}</p>
               <div className="mt-5 space-y-3 border-t border-border pt-4 text-xs">
                 <p className="text-muted-foreground">
                   <span className="block text-[9px] font-bold tracking-[.1em] text-muted-foreground">
                     AVAILABILITY
                   </span>
-                  {ghost.status === "Assigned" ? "Scheduled" : "Available"}
+                  {ghost.status === 'Assigned' ? 'Scheduled' : 'Available'}
                 </p>
                 <p className="text-muted-foreground">
                   <span className="block text-[9px] font-bold tracking-[.1em] text-muted-foreground">
@@ -83,10 +77,10 @@ export function GhostsPage() {
 
 function ThreatBadge({ level }: { level: string }) {
   const colors =
-    level === "High"
-      ? "bg-red-300 text-red-950"
-      : level === "Moderate"
-        ? "bg-orange-300 text-orange-950"
-        : "bg-emerald-300 text-emerald-950";
+    level === 'High'
+      ? 'bg-red-300 text-red-950'
+      : level === 'Moderate'
+        ? 'bg-orange-300 text-orange-950'
+        : 'bg-emerald-300 text-emerald-950';
   return <Badge className={`border-0 text-[9px] ${colors}`}>{level}</Badge>;
 }
