@@ -147,6 +147,9 @@ importers:
       '@ghost-crm/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@opentelemetry/api':
+        specifier: ^1.10.0
+        version: 1.10.0
       '@opentelemetry/auto-instrumentations-node':
         specifier: ^0.83.1
         version: 0.83.1(@opentelemetry/api@1.10.0)(@opentelemetry/core@3.1.1(@opentelemetry/api@1.10.0))
