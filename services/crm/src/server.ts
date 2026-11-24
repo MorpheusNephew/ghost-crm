@@ -1,4 +1,6 @@
-import { createApp } from './app';
+import { shutdownTelemetry } from './telemetry';
+
+const { createApp } = await import('./app');
 
 const app = createApp();
 const port = Number(process.env.PORT ?? 3000);
@@ -14,6 +16,11 @@ const shutdown = (signal: NodeJS.Signals) => {
       console.error('CRM service failed to shut down cleanly.', error);
       process.exitCode = 1;
     }
+
+    void shutdownTelemetry().catch((telemetryError: unknown) => {
+      console.error('CRM telemetry failed to shut down cleanly.', telemetryError);
+      process.exitCode = 1;
+    });
   });
 };
 

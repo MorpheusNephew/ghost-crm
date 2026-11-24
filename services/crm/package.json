@@ -15,6 +15,9 @@
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^9.1.0",
     "@ghost-crm/contracts": "workspace:*",
+    "@opentelemetry/api": "^1.10.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.83.1",
+    "@opentelemetry/sdk-node": "^0.301.2",
     "express": "^5.3.0",
     "pino-http": "^11.0.0",
     "zod": "^4.6.7"

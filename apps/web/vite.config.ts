@@ -15,6 +15,10 @@ export default defineConfig({
     proxy: {
       '/api': process.env.VITE_CRM_API_PROXY_TARGET ?? 'http://localhost:3000',
       '/openapi.json': process.env.VITE_CRM_API_PROXY_TARGET ?? 'http://localhost:3000',
+      '/otel': {
+        rewrite: (path) => path.replace(/^\/otel/, ''),
+        target: process.env.VITE_OTEL_COLLECTOR_PROXY_TARGET ?? 'http://localhost:4318',
+      },
     },
   },
   test: {

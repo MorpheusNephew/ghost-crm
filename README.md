@@ -82,6 +82,19 @@ make dev-api-logs
 make dev-load-balancer-logs
 ```
 
+### Local trace viewer
+
+`make dev` also starts an OpenTelemetry Collector and Jaeger. Open
+<http://localhost:16686> to inspect traces locally. The browser exports spans to
+the same-origin `/otel` endpoint, the Collector forwards them to Jaeger, and the
+CRM replicas export their server spans to that same Collector. A browser request
+to `/api` therefore appears as one distributed trace across the web app and CRM
+service.
+
+The Collector and Jaeger are local development infrastructure only. A production
+deployment can keep the application instrumentation and route OTLP data to a
+managed observability backend through its own Collector configuration.
+
 ## API contracts and generated client
 
 Shared Zod schemas in `packages/contracts` define CRM response shapes and OpenAPI metadata. The CRM service serves the generated OpenAPI 3.1 document at `/openapi.json`.

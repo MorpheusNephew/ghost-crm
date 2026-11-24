@@ -1,5 +1,5 @@
 import express from 'express';
-import { requestLogger } from './middleware/index';
+import { requestLogger } from './middleware/request-logger';
 import { eventsRouter } from './routers/events';
 import { ghostsRouter } from './routers/ghosts';
 import { healthRouter } from './routers/health';
