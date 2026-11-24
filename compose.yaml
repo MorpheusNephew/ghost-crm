@@ -1,8 +1,35 @@
 services:
+  crm-load-balancer:
+    image: traefik:v3.6.16
+    command:
+      - --accesslog=true
+      - --entrypoints.web.address=:80
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=ghost-crm
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - ghost-crm
+
   crm-api:
     build:
       context: .
       dockerfile: services/crm/Dockerfile
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.crm-api.rule=PathPrefix(`/api`) || Path(`/health`) || Path(`/openapi.json`)
+      - traefik.http.services.crm-api.loadbalancer.server.port=3000
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
     networks:
       - ghost-crm
 

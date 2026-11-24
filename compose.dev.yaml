@@ -1,4 +1,8 @@
 services:
+  crm-load-balancer:
+    ports:
+      - '3000:80'
+
   crm-api:
     build:
       target: development
@@ -6,8 +10,6 @@ services:
       sh -c "pnpm install --frozen-lockfile --filter @ghost-crm/crm... &&
       pnpm --filter @ghost-crm/contracts build &&
       pnpm --filter @ghost-crm/crm dev"
-    ports:
-      - '3000:3000'
     volumes:
       - ./services/crm:/workspace/services/crm
       - ./packages/contracts:/workspace/packages/contracts
@@ -21,7 +23,7 @@ services:
       sh -c "pnpm install --frozen-lockfile --filter web... &&
       pnpm --filter web exec vite --host 0.0.0.0"
     environment:
-      VITE_CRM_API_PROXY_TARGET: http://crm-api:3000
+      VITE_CRM_API_PROXY_TARGET: http://crm-load-balancer
     ports:
       - '5173:5173'
     volumes:

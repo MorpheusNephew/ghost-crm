@@ -1,10 +1,10 @@
 :80 {
   handle /api/* {
-    reverse_proxy crm-api:3000
+    reverse_proxy crm-load-balancer:80
   }
 
   handle /openapi.json {
-    reverse_proxy crm-api:3000
+    reverse_proxy crm-load-balancer:80
   }
 
   handle {

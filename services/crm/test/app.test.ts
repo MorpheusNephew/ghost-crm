@@ -16,8 +16,15 @@ describe('CRM application', () => {
     const response = await request(app).get('/api/events');
 
     expect(response.status).toBe(200);
+    expect(response.headers['x-request-id']).toEqual(expect.any(String));
     expect(response.body.events).toHaveLength(2);
     expect(response.body.events[0]).not.toHaveProperty('roster');
+  });
+
+  it('preserves caller-provided request IDs', async () => {
+    const response = await request(app).get('/api/events').set('x-request-id', 'request-123');
+
+    expect(response.headers['x-request-id']).toBe('request-123');
   });
 
   it('lists ghost summaries', async () => {
