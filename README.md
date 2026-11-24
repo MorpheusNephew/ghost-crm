@@ -43,7 +43,7 @@ The Makefile is the recommended way to start the local environments.
 make dev
 ```
 
-This starts the hot-reloading web application at <http://localhost:5173> and the CRM API at <http://localhost:3000>. Stop it with:
+This starts the hot-reloading web application at <http://localhost:5173>, a local load balancer at <http://localhost:3000>, and two CRM API replicas by default. The load balancer keeps the CRM API URL stable while distributing requests across healthy instances. Stop the environment with:
 
 ```sh
 make dev-down
@@ -63,7 +63,24 @@ Pass Docker Compose flags through `COMPOSE_ARGS`; for example, run either enviro
 make dev COMPOSE_ARGS="--detach"
 ```
 
+Set `CRM_REPLICAS` to choose a different number of CRM instances:
+
+```sh
+make dev CRM_REPLICAS=3
+```
+
 Use `make help` to see all available environment and log commands.
+
+### Development logs
+
+The CRM service emits structured JSON request logs with a request ID, response time,
+status code, and replica identifier. Health checks are excluded. Follow only the CRM
+request logs or load-balancer access logs with:
+
+```sh
+make dev-api-logs
+make dev-load-balancer-logs
+```
 
 ## API contracts and generated client
 
@@ -77,7 +94,7 @@ pnpm generate:client
 
 This updates `services/crm/openapi.json` and the typed client in `apps/web/src/api/generated`. Web application code should use the generated query options rather than hand-written fetch calls for documented endpoints.
 
-When using Docker Compose, the web service proxies `/api` and `/openapi.json` to the CRM service, keeping the browser on one origin in development and production.
+When using Docker Compose, the web service proxies `/api` and `/openapi.json` through the local load balancer to the CRM service replicas, keeping the browser on one origin in development and production.
 
 ## Quality checks
 

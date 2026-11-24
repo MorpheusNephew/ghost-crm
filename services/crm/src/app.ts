@@ -1,4 +1,5 @@
 import express from 'express';
+import { requestLogger } from './middleware/index';
 import { eventsRouter } from './routers/events';
 import { ghostsRouter } from './routers/ghosts';
 import { healthRouter } from './routers/health';
@@ -8,6 +9,8 @@ import { venuesRouter } from './routers/venues';
 
 export function createApp() {
   const app = express();
+
+  app.use(requestLogger);
 
   app.use('/health', healthRouter);
   app.use('/openapi.json', openApiRouter);
