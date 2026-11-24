@@ -1,4 +1,18 @@
 services:
+  jaeger:
+    image: jaegertracing/jaeger:2.23.0
+    networks:
+      - ghost-crm
+
+  otel-collector:
+    image: otel/opentelemetry-collector:0.165.0
+    command:
+      - --config=/etc/otelcol/config.yaml
+    volumes:
+      - ./infra/otel/collector.yaml:/etc/otelcol/config.yaml:ro
+    networks:
+      - ghost-crm
+
   crm-load-balancer:
     image: traefik:v3.6.16
     command:
@@ -20,6 +34,11 @@ services:
       - traefik.enable=true
       - traefik.http.routers.crm-api.rule=PathPrefix(`/api`) || Path(`/health`) || Path(`/openapi.json`)
       - traefik.http.services.crm-api.loadbalancer.server.port=3000
+    environment:
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://otel-collector:4318/v1/traces
+      OTEL_LOGS_EXPORTER: none
+      OTEL_METRICS_EXPORTER: none
+      OTEL_TRACES_EXPORTER: otlp
     healthcheck:
       test:
         - CMD

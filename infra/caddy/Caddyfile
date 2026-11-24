@@ -7,6 +7,10 @@
     reverse_proxy crm-load-balancer:80
   }
 
+  handle_path /otel/* {
+    reverse_proxy otel-collector:4318
+  }
+
   handle {
     root * /srv
     try_files {path} /index.html
